@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/menu_home">
+
+    <fragment
+        android:id="@+id/menu_home"
+        android:name="com.example.nutri3.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/menu_consults"
+        android:name="com.example.nutri3.fragments.ConsultsFragment"
+        android:label="fragment_consults"
+        tools:layout="@layout/fragment_consults" />
+    <fragment
+        android:id="@+id/menu_calendar"
+        android:name="com.example.nutri3.fragments.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/menu_config"
+        android:name="com.example.nutri3.fragments.ConfigFragment"
+        android:label="fragment_config"
+        tools:layout="@layout/fragment_config" />
+</navigation>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Cor de fundo branca -->
+    <solid android:color="@android:color/white" />
+
+    <!-- Só arredonda o topo -->
+    <corners
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="0dp"
+        android:topLeftRadius="100dp"
+        android:topRightRadius="0dp" />
+
+    <!-- Sombra suave (opcional se quiser dar destaque) -->
+    <padding android:bottom="10dp" />
+</shape>
+

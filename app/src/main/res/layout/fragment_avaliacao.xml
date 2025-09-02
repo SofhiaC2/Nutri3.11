@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.AvaliacaoFragment"
+    android:background="@color/beige"
+    android:orientation="vertical">
+
+    <!-- Cabeçalho -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageButton
+            android:id="@+id/btnVoltar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/outline_arrow_back_24"
+            android:background="@color/beige"
+            android:scaleType="fitCenter"
+            android:contentDescription="Voltar"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avaliação Física"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:layout_marginStart="60dp"/>
+    </LinearLayout>
+
+    <!-- Conteúdo da avaliação -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/container_backgroundone"
+            android:padding="16dp">
+
+            <!-- Peso e Altura -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Peso e Altura"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+            <EditText
+                android:id="@+id/etPeso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="Peso (kg)"/>
+            <EditText
+                android:id="@+id/etAltura"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="Altura (m)"/>
+
+            <!-- Circunferências -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Circunferências (cm)"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+            <EditText android:id="@+id/etCintura"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Cintura"/>
+            <EditText android:id="@+id/etQuadril"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Quadril"/>
+            <EditText android:id="@+id/etBraco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Braço"/>
+            <EditText android:id="@+id/etCoxa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Coxa"/>
+            <EditText android:id="@+id/etPanturrilha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Panturrilha"/>
+
+            <!-- Dobras cutâneas -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dobras Cutâneas (mm)"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+            <EditText android:id="@+id/etTriceps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tríceps"/>
+            <EditText android:id="@+id/etSubescapular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Subescapular"/>
+            <EditText android:id="@+id/etSuprailiaca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Supra-ilíaca"/>
+            <EditText android:id="@+id/etAbdominal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Abdominal"/>
+            <EditText android:id="@+id/etCoxaDobras"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Coxa"/>
+
+            <!-- IMC calculado -->
+            <!-- IMC calculado -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IMC"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+            <TextView
+                android:id="@+id/tvIMC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:background="#EFEFEF"/>
+
+            <!-- Massa corporal -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Massa gorda (%)"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+            <TextView
+                android:id="@+id/tvMassaGorda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:background="#EFEFEF"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Massa muscular (%)"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+            <TextView
+                android:id="@+id/tvMassaMuscular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:background="#EFEFEF"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Massa óssea (%)"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+            <TextView
+                android:id="@+id/tvMassaOssea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:background="#EFEFEF"/>
+
+
+            <!-- Botão Salvar -->
+            <Button
+                android:id="@+id/btnSalvarAvaliacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Salvar Avaliação"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/verde_claro"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
