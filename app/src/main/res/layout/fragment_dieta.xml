@@ -1,14 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.DietaFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:orientation="vertical"
+    >
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="80dp"
+        android:background="@color/white"
+        >
+        <ImageButton
+            android:id="@+id/btnVoltar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/outline_arrow_back_24"
+            android:background="@color/white"
+            android:scaleType="fitCenter"
+            android:contentDescription="Voltar"/>
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Montagem da dieta"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:layout_marginStart="60dp"/>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logo"
+            android:layout_marginLeft="15dp"
+            />
+
+
+    </LinearLayout>
+    <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/beige">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ==== CAFÉ DA MANHÃ ==== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="☕ Café da Manhã"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCafeManha"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/container_backgroundborder"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTotaisCafeManha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+            android:textStyle="bold"
+            android:padding="4dp" />
+
+        <Button
+            android:id="@+id/btnAddCafeManha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Adicionar alimento" />
+
+        <!-- ==== ALMOÇO ==== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🍲 Almoço"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAlmoco"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/container_backgroundborder"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTotaisAlmoco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+            android:textStyle="bold"
+            android:padding="4dp" />
+
+        <Button
+            android:id="@+id/btnAddAlmoco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Adicionar alimento" />
+
+        <!-- ==== CAFÉ DA TARDE ==== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🍎 Café da Tarde"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCafeTarde"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/container_backgroundborder"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTotaisCafeTarde"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+            android:textStyle="bold"
+            android:padding="4dp" />
+
+        <Button
+            android:id="@+id/btnAddCafeTarde"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Adicionar alimento" />
+
+        <!-- ==== JANTAR ==== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🍽️ Jantar"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvJantar"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/container_backgroundone"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTotaisJantar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+            android:textStyle="bold"
+            android:padding="4dp" />
+
+        <Button
+            android:id="@+id/btnAddJantar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Adicionar alimento" />
+
+        <!-- ==== CEIA ==== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🥛 Ceia"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCeia"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/container_backgroundone"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTotaisCeia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+            android:textStyle="bold"
+            android:padding="4dp" />
+
+        <Button
+            android:id="@+id/btnAddCeia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Adicionar alimento" />
+
+        <!-- ==== TOTAL DO DIA ==== -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📊 Totais do Dia"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvTotaisDia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:background="@drawable/container_backgroundborder" />
+
+    </LinearLayout>
+</ScrollView></LinearLayout>

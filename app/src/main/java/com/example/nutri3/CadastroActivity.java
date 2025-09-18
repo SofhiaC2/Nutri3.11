@@ -18,17 +18,8 @@ public class CadastroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_cadastro);
-        Button btnNavegar = findViewById(R.id.btnentrar2); //Botão na primeira tela
-        btnNavegar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Cria um Intent para a segunda tela
-                Intent intent = new Intent(CadastroActivity.this, MenuActivity.class);
-                // Inicia a segunda activity
-                startActivity(intent);
-            }
-        });
+        //Botão na primeira tela
+
 
     }
 }

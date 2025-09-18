@@ -1,4 +1,4 @@
-package com.example.nutri3.fragments;
+package com.example.nutri3.fragments.menu;
 
 import android.os.Bundle;
 

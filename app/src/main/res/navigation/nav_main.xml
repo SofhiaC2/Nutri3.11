@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/menu_home"
-        android:name="com.example.nutri3.fragments.HomeFragment"
+        android:name="com.example.nutri3.fragments.menu.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/menu_consults"
-        android:name="com.example.nutri3.fragments.ConsultsFragment"
+        android:name="com.example.nutri3.fragments.menu.ConsultsFragment"
         android:label="fragment_consults"
         tools:layout="@layout/fragment_consults" />
     <fragment
         android:id="@+id/menu_calendar"
-        android:name="com.example.nutri3.fragments.CalendarFragment"
+        android:name="com.example.nutri3.fragments.menu.CalendarFragment"
         android:label="fragment_calendar"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/menu_config"
-        android:name="com.example.nutri3.fragments.ConfigFragment"
+        android:name="com.example.nutri3.fragments.menu.ConfigFragment"
         android:label="fragment_config"
         tools:layout="@layout/fragment_config" />
 </navigation>

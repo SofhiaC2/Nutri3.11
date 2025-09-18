@@ -20,4 +20,9 @@
 
         <item name="colorOnPrimary">@color/white</item>
     </style>
+    <style name="Theme.SeuApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Isso permite mostrar a sombra (elevation) -->
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
 </resources>
