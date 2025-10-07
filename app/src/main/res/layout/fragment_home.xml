@@ -17,6 +17,7 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/logo" />
         <TextView
+            android:id="@+id/tvGreeting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Olá,\nFulano"

@@ -17,12 +17,28 @@
         tools:layout="@layout/fragment_consults" />
     <fragment
         android:id="@+id/menu_calendar"
-        android:name="com.example.nutri3.fragments.menu.CalendarFragment"
+        android:name="com.example.nutri3.fragments.menu.HostPacientesFragment"
         android:label="fragment_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_pacienteshost" >
+        <action
+            android:id="@+id/action_menu_calendar_to_adicionarPacientesFragment"
+            app:destination="@id/adicionarPacientesFragment" />
+        <action
+            android:id="@+id/action_menu_calendar_to_verPacientesFragment"
+            app:destination="@id/verPacientesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/menu_config"
         android:name="com.example.nutri3.fragments.menu.ConfigFragment"
         android:label="fragment_config"
         tools:layout="@layout/fragment_config" />
+    <fragment
+        android:id="@+id/adicionarPacientesFragment"
+        android:name="com.example.nutri3.fragments.consultas.AdicionarPacientesFragment"
+        android:label="AdicionarPacientesFragment" />
+    <fragment
+        android:id="@+id/verPacientesFragment"
+        android:name="com.example.nutri3.fragments.consultas.VerPacientesFragment"
+        android:label="fragment_ver_pacientes"
+        tools:layout="@layout/fragment_ver_pacientes" />
 </navigation>

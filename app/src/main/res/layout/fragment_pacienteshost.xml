@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/beige">
+<!--    tools:context=".fragments.pacientes.PacientesHostFragment">-->
+
+
+    <RelativeLayout
+        android:id="@+id/topBarPacientes"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <ImageView
+            android:id="@+id/btnPacientesVoltar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/outline_arrow_back_24"
+            android:contentDescription="Voltar"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/btnPacientesVoltar"
+            android:layout_toStartOf="@id/logoPacientes"
+            android:gravity="center_horizontal"
+            android:text="Pacientes"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
+
+        <ImageView
+            android:id="@+id/logoPacientes"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/logo"
+            android:contentDescription="@string/app_name" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/container_backgroundone"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:paddingBottom="24dp">
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_vertical_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+
+        <TextView
+            android:id="@+id/tvTituloPacientes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Pacientes:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_margin" />
+
+
+        <Button
+            android:id="@+id/btnMenuVerPaciente"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/botao_quadrado"
+            app:backgroundTint="@null"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Ver\nPacientes"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/tvTituloPacientes"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical_center" />
+
+
+        <Button
+            android:id="@+id/btnMenuAdicionarPaciente"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/botao_quadrado"
+            app:backgroundTint="@null"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Adicionar\nPaciente"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@id/btnMenuVerPaciente"
+            app:layout_constraintStart_toEndOf="@id/guideline_vertical_center"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_margin" />
+
+
+        <TextView
+            android:id="@+id/tvTituloGerenciar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Gerenciar:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/btnMenuVerPaciente"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_margin"/>
+
+
+        <Button
+            android:id="@+id/btnMenuAtualizarPaciente"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/botao_quadrado"
+            app:backgroundTint="@null"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Atualizar\nDados"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/tvTituloGerenciar"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical_center" />
+
+        <Button
+            android:id="@+id/btnMenuExcluirPaciente"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/botao_quadrado"
+            app:backgroundTint="@null"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Excluir\nPaciente"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@id/btnMenuAtualizarPaciente"
+            app:layout_constraintStart_toEndOf="@id/guideline_vertical_center"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_margin" />
+
+
+        <TextView
+            android:id="@+id/tvTituloConsultas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Consultas:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/btnMenuAtualizarPaciente"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_margin"/>
+
+
+        <Button
+            android:id="@+id/btnMenuNovaAvaliacao"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/botao_quadrado"
+            app:backgroundTint="@null"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Nova\nAvaliação"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/tvTituloConsultas"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical_center" />
+
+
+        <Button
+            android:id="@+id/btnMenuHistoricoConsultas"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/botao_quadrado"
+            app:backgroundTint="@null"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Histórico\nConsultas"
+            android:textAllCaps="false"
+            android:visibility="gone"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/btnMenuNovaAvaliacao"
+        app:layout_constraintStart_toEndOf="@id/guideline_vertical_center"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_margin" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
+    </LinearLayout>

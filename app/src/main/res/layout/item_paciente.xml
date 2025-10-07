@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardPaciente"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Ícone ou Imagem do Paciente (opcional) -->
+        <ImageView
+            android:id="@+id/ivIconePaciente"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/icon_consults"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="Ícone do Paciente"/>
+
+        <!-- Nome do Paciente -->
+        <TextView
+            android:id="@+id/tvNomePacienteItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="João da Silva Pereira"
+            app:layout_constraintStart_toEndOf="@id/ivIconePaciente"
+            app:layout_constraintTop_toTopOf="@id/ivIconePaciente"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Email ou Telefone do Paciente -->
+        <TextView
+            android:id="@+id/tvEmailPacienteItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            tools:text="joao.silva@email.com"
+            app:layout_constraintStart_toStartOf="@id/tvNomePacienteItem"
+            app:layout_constraintTop_toBottomOf="@id/tvNomePacienteItem"
+            app:layout_constraintEnd_toEndOf="@id/tvNomePacienteItem" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

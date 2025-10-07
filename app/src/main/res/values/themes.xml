@@ -1,5 +1,9 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+
     <style name="Base.Theme.Nutri3" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
@@ -24,5 +28,13 @@
         <!-- Isso permite mostrar a sombra (elevation) -->
         <item name="android:stateListAnimator">@null</item>
     </style>
+
+
+
+
+
+
+
+
 
 </resources>

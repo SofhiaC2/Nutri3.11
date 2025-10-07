@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/beige"
+    tools:context=".fragments.ui.RegisterFragment"> <!-- Contexto aponta para RegisterFragment -->
+
+    <!-- Barra de Título (Toolbar) -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/beige"
+        app:elevation="6dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/cabecalho"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/beige_dark"
+            app:contentInsetStart="0dp">
+
+            <!-- O ID 'btnVoltar' corresponde ao esperado no seu código Java -->
+            <ImageView
+                android:id="@+id/btnVoltar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/outline_arrow_back_24"
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Voltar"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inscreva-se"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical"/>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Conteúdo do formulário com scroll -->
+    <ScrollView
+        android:id="@+id/scrollViewCadastro"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_constraintBottom_toTopOf="@id/btnInscrever"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Nome -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Nome Completo"
+                android:textSize="18sp" />
+            <EditText
+                android:id="@+id/etNome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_background"
+                android:hint="Ex: Ana Silva"
+                android:inputType="textPersonName|textCapWords"
+                android:padding="12dp" />
+
+            <!-- Data de nascimento -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Data de nascimento"
+                android:textSize="18sp" />
+            <EditText
+                android:id="@+id/etDataNasc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_background"
+                android:hint="DD/MM/AAAA"
+                android:inputType="datetime"
+                android:maxLength="10"
+                android:padding="12dp" />
+
+            <!-- Email -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Email"
+                android:textSize="18sp" />
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_background"
+                android:hint="Ex: anasilva@gmail.com"
+                android:inputType="textEmailAddress"
+                android:padding="12dp" />
+
+            <!-- Senha -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Senha"
+                android:textSize="18sp" />
+            <EditText
+                android:id="@+id/etSenha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_background"
+                android:hint="********"
+                android:inputType="textPassword"
+                android:padding="12dp" />
+
+            <!-- Confirmar senha -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Confirme a senha"
+                android:textSize="18sp" />
+            <EditText
+                android:id="@+id/etConfirmSenha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_background"
+                android:hint="********"
+                android:inputType="textPassword"
+                android:padding="12dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Botão fixo no rodapé -->
+    <Button
+        android:id="@+id/btnInscrever"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Inscrever-se"
+        android:textAllCaps="false"
+        android:background="@drawable/button_background"
+        android:padding="12dp"
+        android:textSize="18sp"
+        app:backgroundTint="@null"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
