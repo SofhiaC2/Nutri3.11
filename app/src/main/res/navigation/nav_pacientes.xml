@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_pacientes">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_pacientes"
+    app:startDestination="@+id/hostPacientesFragment">
+
+    <!-- HostPacientesFragment não muda -->
+    <fragment
+        android:id="@+id/hostPacientesFragment"
+        android:name="com.example.nutri3.fragments.menu.HostPacientesFragment"
+        android:label="fragment_pacienteshost"
+        tools:layout="@layout/fragment_pacienteshost">
+        <action
+            android:id="@+id/action_hostPacientes_to_verPacientes"
+            app:destination="@id/verPacientesFragment" />
+        <action
+            android:id="@+id/action_hostPacientes_to_adicionarPacientes"
+            app:destination="@id/adicionarPacientesFragment" />
+    </fragment>
+
+    <!-- VerPacientesFragment AGORA TEM UMA AÇÃO PARA "EDITAR" -->
+    <fragment
+        android:id="@+id/verPacientesFragment"
+        android:name="com.example.nutri3.fragments.consultas.VerPacientesFragment"
+        android:label="fragment_ver_pacientes"
+        tools:layout="@layout/fragment_ver_pacientes" >
+        <!-- AÇÃO QUE LEVA PARA O FORMULÁRIO NO MODO EDIÇÃO -->
+        <action
+            android:id="@+id/action_verPacientesFragment_to_adicionarPacientesFragment"
+            app:destination="@id/adicionarPacientesFragment" />
+    </fragment>
+
+    <!-- AdicionarPacientesFragment AGORA É UM FRAGMENTO INTELIGENTE -->
+    <fragment
+        android:id="@+id/adicionarPacientesFragment"
+        android:name="com.example.nutri3.fragments.consultas.AdicionarPacientesFragment"
+        android:label="Formulário Paciente"
+        tools:layout="@layout/fragment_adicionar_pacientes" >
+        <!--
+           ARGUMENTO: ID do paciente para editar.
+           É opcional (nullable=true), pois quando o usuário clica em "Adicionar",
+           nenhum ID é passado, e ele será nulo.
+        -->
+        <argument
+            android:name="pacienteId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
 </navigation>

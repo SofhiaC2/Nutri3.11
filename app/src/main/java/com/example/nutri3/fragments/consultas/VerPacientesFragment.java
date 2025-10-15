@@ -1,4 +1,4 @@
-package com.example.nutri3.fragments.consultas; // Ou o pacote correto do seu fragmento
+package com.example.nutri3.fragments.consultas;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -6,14 +6,17 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+import com.example.nutri3.fragments.consultas.VerPacientesFragmentDirections;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog; // Import necessário para o diálogo
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.example.nutri3.fragments.consultas.Paciente;
 
-import com.example.nutri3.R;
 import com.example.nutri3.adapters.PacienteAdapter;
 import com.example.nutri3.databinding.FragmentVerPacientesBinding;
 import com.example.nutri3.fragments.consultas.Paciente;
@@ -28,12 +31,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VerPacientesFragment extends Fragment {
+// --- MUDANÇA 1: Implementar a interface do Adapter ---
+public class VerPacientesFragment extends Fragment implements PacienteAdapter.OnPacienteInteractionListener {
 
     private FragmentVerPacientesBinding binding;
     private NavController navController;
     private PacienteAdapter adapter;
     private final List<Paciente> listaPacientes = new ArrayList<>();
+    // Listener do Firebase para poder removê-lo no onDestroy e evitar memory leaks
+    private ValueEventListener pacientesValueEventListener;
+    private DatabaseReference userPacientesRef;
 
     @Nullable
     @Override
@@ -75,11 +82,18 @@ public class VerPacientesFragment extends Fragment {
         binding.tvListaVazia.setVisibility(View.GONE);
 
         String userId = currentUser.getUid();
-        DatabaseReference userPacientesRef = FirebaseDatabase.getInstance().getReference("pacientes").child(userId);
+        userPacientesRef = FirebaseDatabase.getInstance().getReference("pacientes").child(userId);
 
-        userPacientesRef.addValueEventListener(new ValueEventListener() {
+        // Previne a criação de múltiplos listeners
+        if (pacientesValueEventListener != null) {
+            userPacientesRef.removeEventListener(pacientesValueEventListener);
+        }
+
+        pacientesValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!isAdded()) return; // Previne crash se o fragmento for fechado
+
                 listaPacientes.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Paciente paciente = snapshot.getValue(Paciente.class);
@@ -96,10 +110,12 @@ public class VerPacientesFragment extends Fragment {
                 } else {
                     showRecyclerView();
                     if (adapter == null) {
-                        adapter = new PacienteAdapter(listaPacientes);
+                        // --- MUDANÇA 2: Passar 'this' (o fragment) como listener para o Adapter ---
+                        adapter = new PacienteAdapter(listaPacientes, VerPacientesFragment.this);
                         binding.recyclerViewPacientes.setAdapter(adapter);
                     } else {
-                        // Se o adapter já existe, atualize os dados (útil para atualizações em tempo real)
+                        // Notifica o adapter que a lista mudou (mais eficiente que filtrar de novo)
+                        adapter.updateList(listaPacientes);
                         adapter.getFilter().filter(binding.etPesquisarPaciente.getText().toString());
                     }
                 }
@@ -107,9 +123,12 @@ public class VerPacientesFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                showEmptyState("Erro ao carregar dados: " + databaseError.getMessage());
+                if (isAdded()) {
+                    showEmptyState("Erro ao carregar dados: " + databaseError.getMessage());
+                }
             }
-        });
+        };
+        userPacientesRef.addValueEventListener(pacientesValueEventListener);
     }
 
     private void setupSearch() {
@@ -119,7 +138,6 @@ public class VerPacientesFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // A cada letra digitada, o filtro do adapter é chamado
                 if (adapter != null) {
                     adapter.getFilter().filter(s);
                 }
@@ -142,10 +160,57 @@ public class VerPacientesFragment extends Fragment {
         binding.tvListaVazia.setText(message);
     }
 
+    // --- MUDANÇA 3: Implementação dos métodos da interface ---
+    @Override
+    public void onEditClick(Paciente paciente) {
+        // Cria a ação de navegação segura
+        VerPacientesFragmentDirections.ActionVerPacientesFragmentToAdicionarPacientesFragment action =
+                VerPacientesFragmentDirections.actionVerPacientesFragmentToAdicionarPacientesFragment();
+
+        // Passa o ID do paciente (argumento opcional)
+        action.setPacienteId(paciente.getId());
+
+        // Executa a navegação
+        navController.navigate(action);
+    }
+
+
+    @Override
+    public void onDeleteClick(Paciente paciente) {
+        // Verifica se o contexto é válido antes de criar o diálogo
+        if (getContext() == null) return;
+
+        // Mostra o diálogo de confirmação para exclusão
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Excluir Paciente")
+                .setMessage("Tem certeza que deseja excluir " + paciente.getNome() + "? Esta ação não pode ser desfeita.")
+                .setPositiveButton("Excluir", (dialog, which) -> {
+                    // Lógica para excluir o paciente do Firebase
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        FirebaseDatabase.getInstance().getReference("pacientes")
+                                .child(user.getUid())
+                                .child(paciente.getId())
+                                .removeValue()
+                                .addOnSuccessListener(aVoid -> {
+                                    if(isAdded()) Toast.makeText(getContext(), "Paciente excluído.", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    if(isAdded()) Toast.makeText(getContext(), "Erro ao excluir.", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Remove o listener do Firebase para evitar memory leaks e crashes
+        if (userPacientesRef != null && pacientesValueEventListener != null) {
+            userPacientesRef.removeEventListener(pacientesValueEventListener);
+        }
         binding = null; // Limpa a referência ao binding
     }
 }

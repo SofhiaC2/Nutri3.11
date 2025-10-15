@@ -43,6 +43,17 @@
         android:id="@+id/recover_accountFragment"
         android:name="com.example.nutri3.fragments.ui.Recover_accountFragment"
         android:label="Recover_accountFragment" />
-    <!-- Após o registro, o AuthStateListener na MainActivity cuidará da navegação para nav_main -->
 
-</navigation>
+
+        <!-- 3. ADICIONE O ARGUMENTO AQUI TAMBÉM -->
+        <!-- O destino precisa declarar o argumento que ele pode receber -->
+        <argument
+            android:name="isEditMode"
+            app:argType="boolean"
+            android:defaultValue="false" />
+
+
+
+
+
+    </navigation>

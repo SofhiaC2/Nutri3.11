@@ -7,48 +7,69 @@
     android:background="@color/beige">
 <!--    tools:context=".fragments.pacientes.AddPacienteFragment"> -->
 
+    <!-- DENTRO DE res/layout/fragment_adicionar_pacientes.xml -->
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarAddPaciente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/beige"
         app:elevation="6dp"
-    app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarAddPaciente"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/beige_dark"
-        app:contentInsetStart="0dp"
-        android:elevation="0dp" >
+        <!-- SUBSTITUA SUA TOOLBAR ANTIGA POR ESTA -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarAddPaciente"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/beige_dark"
+            app:contentInsetStart="0dp"
+            android:elevation="0dp" >
 
-        <ImageView
-            android:id="@+id/btnAddPacienteVoltar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/outline_arrow_back_24"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
-            android:padding="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="Voltar" />
+            <!-- Usamos um ConstraintLayout para ter controle total da posição -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvToolbarTitleAddPaciente"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Adicionar Paciente"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            android:layout_gravity="center_vertical"/>
-    </androidx.appcompat.widget.Toolbar>
-</com.google.android.material.appbar.AppBarLayout>
+                <!-- 1. SETA DE VOLTAR: Ancorada no início (esquerda) do pai -->
+                <ImageView
+                    android:id="@+id/btnAddPacienteVoltar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/outline_arrow_back_24"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Voltar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="8dp"/>
 
-<ScrollView
+                <!-- 2. TÍTULO: Ancorado no centro horizontal do pai -->
+                <TextView
+                    android:id="@+id/tvToolbarTitleAddPaciente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:text=""
+                    tools:text="Título da Tela"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- O resto do seu arquivo (ScrollView, Button, etc.) permanece igual -->
+
+
+
+    <ScrollView
 android:id="@+id/scrollViewAddPaciente"
 android:layout_width="0dp"
 android:layout_height="0dp"

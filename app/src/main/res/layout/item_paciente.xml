@@ -6,11 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
     android:layout_marginTop="8dp"
+    android:layout_marginEnd="16dp"
     android:layout_marginBottom="8dp"
-    android:clickable="true"
-    android:focusable="true"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
@@ -19,40 +17,69 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Ícone ou Imagem do Paciente (opcional) -->
         <ImageView
             android:id="@+id/ivIconePaciente"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:contentDescription="Ícone do Paciente"
             android:src="@drawable/icon_consults"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="Ícone do Paciente"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Nome do Paciente -->
         <TextView
             android:id="@+id/tvNomePacienteItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="João da Silva Pereira"
+            app:layout_constraintEnd_toStartOf="@+id/ivEditarPaciente"
             app:layout_constraintStart_toEndOf="@id/ivIconePaciente"
             app:layout_constraintTop_toTopOf="@id/ivIconePaciente"
-            app:layout_constraintEnd_toEndOf="parent" />
+            tools:text="João da Silva Pereira" />
 
-        <!-- Email ou Telefone do Paciente -->
         <TextView
             android:id="@+id/tvEmailPacienteItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textSize="14sp"
-            tools:text="joao.silva@email.com"
+            app:layout_constraintEnd_toEndOf="@id/tvNomePacienteItem"
             app:layout_constraintStart_toStartOf="@id/tvNomePacienteItem"
             app:layout_constraintTop_toBottomOf="@id/tvNomePacienteItem"
-            app:layout_constraintEnd_toEndOf="@id/tvNomePacienteItem" />
+            tools:text="joao.silva@email.com" />
+
+        <!-- ÍCONE DE EXCLUIR (ADICIONADO) -->
+        <ImageView
+            android:id="@+id/ivExcluirPaciente"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Excluir paciente"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@drawable/icon_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+             />
+
+        <!-- ÍCONE DE EDITAR (ADICIONADO) -->
+        <ImageView
+            android:id="@+id/ivEditarPaciente"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Editar paciente"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@drawable/icon_edit"
+            app:layout_constraintEnd_toStartOf="@+id/ivExcluirPaciente"
+            app:layout_constraintTop_toTopOf="parent"
+             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

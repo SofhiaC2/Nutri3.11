@@ -1,17 +1,21 @@
 package com.example.nutri3;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View; // Importar View
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration; // Importar
-import androidx.navigation.ui.NavigationUI;       // Importar
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import com.example.nutri3.databinding.ActivityMainBinding; // Vamos usar View Binding aqui também!
+import com.example.nutri3.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -19,67 +23,67 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private ActivityMainBinding binding; // Usar View Binding para segurança e clareza
+    private ActivityMainBinding binding;
     private NavController navController;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
-    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Configuração com View Binding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Encontra o NavHostFragment (é o container dos seus fragmentos)
+        // 1. Procura o NavHostFragment pelo ID definido no XML.
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_ac_login); // Confirme que este ID está no seu activity_main.xml
+                .findFragmentById(R.id.nav_host_fragment);
 
         if (navHostFragment == null) {
-            Log.e(TAG, "NavHostFragment não encontrado!");
+            Log.e(TAG, "NavHostFragment não encontrado! Verifique o ID no activity_main.xml.");
             finish();
             return;
         }
+
         navController = navHostFragment.getNavController();
         mAuth = FirebaseAuth.getInstance();
 
-        // **A PARTE MAIS IMPORTANTE DA CORREÇÃO**
-        // Define quais são os destinos de "nível superior". A BottomNavigationView
-        // só aparecerá nestes fragmentos.
-        appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.menu_home, R.id.menu_consults, R.id.menu_calendar, R.id.menu_config
+        // 2. Define destinos de nível superior.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.menu_home, R.id.menu_consults, R.id.nav_pacientes, R.id.menu_config
         ).build();
 
-        // Conecta a BottomNavigationView ao NavController.
-        // Isto faz com que clicar nos ícones troque os fragmentos E gerencie a visibilidade.
-        NavigationUI.setupWithNavController(binding.bottomNavigation, navController); // Use o ID do seu BottomNavigationView
+        // 3. Conecta a BottomNavigationView ao NavController.
+        NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
 
-        // Listener para gerenciar a troca entre os grafos de login e principal
+        // 4. Inicializa o AuthStateListener.
         setupAuthStateListener();
     }
 
     private void setupAuthStateListener() {
         authStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
+
             if (user != null) {
                 // USUÁRIO LOGADO
-                // Se não estiver já no grafo principal, troca para ele.
                 if (navController.getGraph().getId() != R.id.nav_main) {
-                    navController.setGraph(R.navigation.nav_main);
-                    Log.d(TAG, "AuthState: Usuário LOGADO. Trocando para nav_main.");
+                    try {
+                        navController.setGraph(R.navigation.nav_main);
+                        Log.d(TAG, "AuthState: Usuário LOGADO. Garantindo nav_main.");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Falha ao definir nav_main no listener.", e);
+                    }
                 }
-                // Mostra a BottomNavigationView
                 binding.bottomNavigation.setVisibility(View.VISIBLE);
             } else {
                 // USUÁRIO NÃO LOGADO
-                // Se não estiver já no grafo de login, troca para ele.
                 if (navController.getGraph().getId() != R.id.nav_login) {
-                    navController.setGraph(R.navigation.nav_login);
-                    Log.d(TAG, "AuthState: Usuário NÃO LOGADO. Trocando para nav_login.");
+                    try {
+                        navController.setGraph(R.navigation.nav_login);
+                        Log.d(TAG, "AuthState: Usuário NÃO LOGADO. Trocando para nav_login.");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Falha ao definir nav_login no listener.", e);
+                    }
                 }
-                // Esconde a BottomNavigationView
                 binding.bottomNavigation.setVisibility(View.GONE);
             }
         };
@@ -97,5 +101,25 @@ public class MainActivity extends AppCompatActivity {
         if (authStateListener != null) {
             mAuth.removeAuthStateListener(authStateListener);
         }
+    }
+
+    // 🔽 ADIÇÃO: Fecha o teclado ao tocar fora de um EditText 🔽
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

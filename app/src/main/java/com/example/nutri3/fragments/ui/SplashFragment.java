@@ -3,67 +3,51 @@ package com.example.nutri3.fragments.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log; // Adicionar para logs
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
 import com.example.nutri3.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashFragment extends Fragment {
-    private static final String TAG = "SplashFragment"; // Tag para logs
-    private static final int SPLASH_TIMEOUT = 2000;
 
-    public SplashFragment() {
-        // Required empty public constructor
-    }
+    private static final String TAG = "SplashFragment";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated");
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Log.d(TAG, "Handler executando após timeout.");
-            // Verifica se o fragmento ainda está adicionado à atividade
-            // e se o NavController ainda está no contexto do nav_login
-            // antes de tentar navegar.
-            if (isAdded() && getActivity() != null) {
-                try {
-                    NavController navController = NavHostFragment.findNavController(SplashFragment.this);
-                    // Só navega para login SE o gráfico atual AINDA FOR o nav_login.
-                    // Se a MainActivity já trocou para nav_main, esta condição será falsa.
-                    if (navController.getGraph().getId() == R.id.nav_login) {
-                        Log.d(TAG, "Navegando para LoginFragment a partir do Splash.");
-                        navController.navigate(R.id.action_splashFragment_to_loginFragment);
-                    } else {
-                        Log.d(TAG, "Não navegou para Login, gráfico atual não é nav_login (provavelmente nav_main). ID do gráfico atual: " + navController.getGraph().getId());
-                    }
-                } catch (IllegalStateException e) {
-                    // Isso pode acontecer se o NavController não estiver mais disponível ou o fragmento desanexado
-                    Log.e(TAG, "IllegalStateException ao tentar navegar: " + e.getMessage());
-                } catch (IllegalArgumentException e) {
-                    // Isso pode acontecer se a ação não for encontrada (ex: se o gráfico já mudou para nav_main)
-                    Log.e(TAG, "IllegalArgumentException ao tentar navegar (ação não encontrada?): " + e.getMessage());
-                }
+            if (!isAdded()) return; // Garante que o fragmento ainda está na tela
+
+            NavController navController = NavHostFragment.findNavController(this);
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            if (currentUser != null) {
+                // Usuário JÁ está logado, troca para o grafo principal.
+                Log.d(TAG, "Usuário logado. Trocando para nav_main.");
+                NavGraph mainGraph = navController.getNavInflater().inflate(R.navigation.nav_main);
+                navController.setGraph(mainGraph, null);
             } else {
-                Log.d(TAG, "SplashFragment não está mais adicionado ou Activity é nula. Não vai navegar.");
+                // Usuário não está logado, vai para a tela de login.
+                Log.d(TAG, "Usuário não logado. Indo para LoginFragment.");
+                navController.navigate(R.id.action_splashFragment_to_loginFragment);
             }
-        }, SPLASH_TIMEOUT);
+        }, 1500); // Atraso de 1.5s para a splash ser vista
     }
 }
