@@ -39,6 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/tvToolbarTitle2"
                 android:text="Inscreva-se"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -117,6 +118,7 @@
 
             <!-- Senha -->
             <TextView
+                android:id="@+id/tvSenhaLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -133,6 +135,7 @@
 
             <!-- Confirmar senha -->
             <TextView
+                android:id="@+id/tvConfirmSenhaLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -167,4 +170,3 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

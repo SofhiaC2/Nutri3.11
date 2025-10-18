@@ -22,6 +22,8 @@ public class ConfigFragment extends Fragment {
     private FragmentConfigBinding binding;
     private FirebaseAuth mAuth;
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +50,15 @@ public class ConfigFragment extends Fragment {
         binding.cardSair.setOnClickListener(v -> {
             mostrarDialogoSair();
         });
+
+        // --- PARTE QUE FALTAVA ---
+        // Adiciona a funcionalidade de clique para o card "Sobre o App"
+        binding.cardSobreApp.setOnClickListener(v -> {
+            // Mostra uma mensagem simples. No futuro, você pode substituir isso
+            // por um diálogo mais elaborado com informações do app.
+            Toast.makeText(getContext(), "Nutri3 App v1.0\nDesenvolvido por [Seu Nome]", Toast.LENGTH_LONG).show();
+        });
+        // --- FIM DA PARTE QUE FALTAVA ---
     }
 
     private void mostrarDialogoSair() {

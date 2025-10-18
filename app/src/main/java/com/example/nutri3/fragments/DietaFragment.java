@@ -1,66 +1,109 @@
+
 package com.example.nutri3.fragments;
 
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.nutri3.R;
+// Importe o ViewBinding para o seu layout da dieta
+import com.example.nutri3.databinding.FragmentDietaBinding;
+// Importe o ViewModel do pacote correto
+import com.example.nutri3.ViewModel.ConsultaViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DietaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DietaFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // Declarações com ViewBinding e para a lógica de navegação/dados
+    private FragmentDietaBinding binding;
+    private NavController navController;
+    private ConsultaViewModel consultaViewModel;
 
     public DietaFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DietaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DietaFragment newInstance(String param1, String param2) {
-        DietaFragment fragment = new DietaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dieta, container, false);
+        // Usa o ViewBinding para inflar o layout
+        binding = FragmentDietaBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Inicializa o NavController e o ViewModel (mesma instância da Activity)
+        navController = NavHostFragment.findNavController(this);
+        consultaViewModel = new ViewModelProvider(requireActivity()).get(ConsultaViewModel.class);
+
+        // Configura os cliques dos botões
+        setupClickListeners();
+
+        // Opcional: Acessa os dados da avaliação para usar nesta tela
+        observeViewModel();
+    }
+
+    private void observeViewModel() {
+        // Exemplo de como usar os dados da avaliação que vieram da tela anterior
+        consultaViewModel.getAvaliacao().observe(getViewLifecycleOwner(), avaliacao -> {
+            if (avaliacao != null && avaliacao.getAltura() > 0) {
+                // Calcula o IMC apenas para mostrar que os dados estão acessíveis
+                double imc = avaliacao.getPeso() / (avaliacao.getAltura() * avaliacao.getAltura());
+                String imcFormatado = String.format("%.2f", imc);
+                Toast.makeText(getContext(), "Dados da avaliação recebidos! IMC calculado: " + imcFormatado, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setupClickListeners() {
+        // Botão para voltar à tela anterior (Avaliação Física, se aplicável)
+        binding.btnVoltar.setOnClickListener(v -> {
+            // TODO: Salvar os dados da dieta no ViewModel antes de voltar, se necessário.
+            navController.popBackStack();
+        });
+
+        // Botão para finalizar e salvar toda a consulta
+        // NOTE: Seu XML não tem um botão de "Salvar Consulta". Adicionei a lógica ao botão do café da manhã como exemplo.
+        // Você deve criar um botão "Salvar Consulta" no seu XML e atrelar esta lógica a ele.
+        binding.btnAddCafeManha.setOnClickListener(v -> {
+            // TODO: Implementar a lógica de adicionar um alimento ao café da manhã.
+            // Esta é uma placeholder para o botão de salvar final.
+            finalizarConsulta();
+        });
+
+        // Adicione aqui os listeners para os outros botões "+ Adicionar alimento"
+        binding.btnAddAlmoco.setOnClickListener(v -> Toast.makeText(getContext(), "Adicionar Almoço: A implementar.", Toast.LENGTH_SHORT).show());
+        binding.btnAddCafeTarde.setOnClickListener(v -> Toast.makeText(getContext(), "Adicionar Café da Tarde: A implementar.", Toast.LENGTH_SHORT).show());
+        binding.btnAddJantar.setOnClickListener(v -> Toast.makeText(getContext(), "Adicionar Jantar: A implementar.", Toast.LENGTH_SHORT).show());
+        binding.btnAddCeia.setOnClickListener(v -> Toast.makeText(getContext(), "Adicionar Ceia: A implementar.", Toast.LENGTH_SHORT).show());
+    }
+
+    private void finalizarConsulta() {
+        // TODO: Aqui você pegaria os dados da Dieta e da Avaliação do ViewModel
+        // e os salvaria permanentemente no Firebase ou banco de dados local.
+
+        Toast.makeText(getContext(), "Consulta completa salva com sucesso!", Toast.LENGTH_LONG).show();
+
+        // Após salvar, limpa o ViewModel para a próxima consulta não ter dados antigos
+        consultaViewModel.limparDados();
+
+        // Navega de volta para a tela inicial dos pacientes, limpando a pilha de navegação.
+        navController.popBackStack(R.id.hostPacientesFragment, false);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // Limpa a referência ao binding
     }
 }
