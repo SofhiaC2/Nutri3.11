@@ -44,7 +44,7 @@ public class ConfigFragment extends Fragment {
         binding.cardEditarPerfil.setOnClickListener(v -> {
             Bundle args = new Bundle();
             args.putBoolean("isEditMode", true);
-            NavHostFragment.findNavController(this).navigate(R.id.registerFragment, args);
+            NavHostFragment.findNavController(this).navigate(R.id.action_global_to_registerFragment,args);
         });
 
         binding.cardSair.setOnClickListener(v -> {

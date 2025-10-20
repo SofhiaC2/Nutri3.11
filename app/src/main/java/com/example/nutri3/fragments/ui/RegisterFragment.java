@@ -407,7 +407,7 @@ public class RegisterFragment extends Fragment {
                                             Toast.makeText(getContext(), "Registro e perfil salvos com sucesso!", Toast.LENGTH_LONG).show();
                                             Log.d(TAG, "Perfil do usuário salvo no Realtime Database para UID: " + uid);
                                             if (isAdded()) {
-                                                navController.navigate(R.id.action_registerFragment_to_loginFragment);
+                                               navController.navigateUp();
                                             }
                                         } else {
                                             String dbErrorMessage = dbTask.getException() != null ? dbTask.getException().getMessage() : "Erro desconhecido ao salvar perfil.";

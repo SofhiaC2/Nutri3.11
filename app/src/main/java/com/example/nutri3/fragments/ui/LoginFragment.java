@@ -75,7 +75,7 @@ public class LoginFragment extends Fragment {
             if (isAdded() && getActivity() != null) {
                 try {
                     NavHostFragment.findNavController(LoginFragment.this)
-                            .navigate(R.id.action_loginFragment_to_registerFragment);
+                            .navigate(R.id.action_loginFragment_to_register);
                 } catch (IllegalArgumentException e) {
                     Log.e(TAG, "Ação action_loginFragment_to_registerFragment não encontrada.", e);
                 }

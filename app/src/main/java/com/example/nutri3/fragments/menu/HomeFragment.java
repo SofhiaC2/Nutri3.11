@@ -45,8 +45,7 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         // Certifique-se de usar a URL correta do seu Realtime Database se não for a padrão
-        mDatabase = FirebaseDatabase.getInstance("https://nutri-c79a2-default-rtdb.firebaseio.com").getReference();
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override

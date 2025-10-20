@@ -5,6 +5,7 @@
     android:id="@+id/nav_main"
     app:startDestination="@id/menu_home">
 
+    <!-- Seus destinos do menu principal -->
     <fragment
         android:id="@+id/menu_home"
         android:name="com.example.nutri3.fragments.menu.HomeFragment"
@@ -15,29 +16,33 @@
         android:name="com.example.nutri3.fragments.menu.ConsultsFragment"
         android:label="fragment_consults"
         tools:layout="@layout/fragment_pacienteshost" />
-
-    <!-- AQUI ESTÁ A MUDANÇA PRINCIPAL -->
-    <!-- O item de menu 'menu_calendar' agora inclui (inclues) o grafo 'nav_pacientes' -->
     <include app:graph="@navigation/nav_pacientes" />
-
     <fragment
         android:id="@+id/menu_config"
         android:name="com.example.nutri3.fragments.menu.ConfigFragment"
         android:label="fragment_config"
         tools:layout="@layout/fragment_config" />
 
-
-        <action
-            android:id="@+id/action_global_to_registerFragment"
-            app:destination="@id/registerFragment" >
-
-
+    <!-- A ação global agora consegue "enxergar" o registerFragment -->
+    <action
+        android:id="@+id/action_global_to_registerFragment"
+        app:destination="@id/registerFragment">
         <argument
             android:name="isEditMode"
-            app:argType="boolean"
-            android:defaultValue="false" />
-        </action>
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </action>
 
 
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.nutri3.fragments.ui.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register">
+        <argument
+            android:name="isEditMode"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
 
 </navigation>
