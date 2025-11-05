@@ -6,11 +6,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -18,9 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.nutri3.R; // Import do R para acessar layouts
 import com.example.nutri3.adapters.PacienteAdapter;
-import com.example.nutri3.databinding.FragmentVerPacientesBinding;
-// Se o seu modelo Paciente estiver em outro pacote, ajuste o import
-import com.example.nutri3.fragments.consultas.Paciente;
+import com.example.nutri3.databinding.FragmentVerPacientesBinding; // Usando o binding do seu novo layout
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,8 +28,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VerPacientesFragment extends Fragment implements PacienteAdapter.OnPacienteInteractionListener {
+// Renomeado para SelecionarPacienteFragment e implementando a interface do Adapter
+public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPacienteInteractionListener {
 
+    // O binding agora é do tipo correto para o seu novo layout
     private FragmentVerPacientesBinding binding;
     private NavController navController;
     private PacienteAdapter adapter;
@@ -44,6 +42,7 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Infla o layout correto
         binding = FragmentVerPacientesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -56,14 +55,13 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
         setupToolbar();
         setupRecyclerView();
         setupSearch();
-
         carregarPacientesDoFirebase();
     }
 
     private void setupToolbar() {
-        // Altera o título para o propósito desta tela
-        binding.tvToolbarTitleVerPacientes.setText("Meus Pacientes");
+        // Os IDs do seu novo layout já estão corretos
         binding.btnVerPacientesVoltar.setOnClickListener(v -> navController.popBackStack());
+        binding.tvToolbarTitleVerPacientes.setText("Selecione o Paciente"); // Ajustando o título
     }
 
     private void setupRecyclerView() {
@@ -109,13 +107,9 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
                 } else {
                     showRecyclerView();
                     if (adapter == null) {
-                        // =====================================================================
-                        // ================ AQUI ESTÁ A ÚNICA ALTERAÇÃO ========================
-                        // Usamos o novo construtor, passando o ID do layout para este fragment.
-                        // =====================================================================
-                        adapter = new PacienteAdapter(listaPacientes, R.layout.item_paciente, VerPacientesFragment.this);
-                        // =====================================================================
-
+                        // --- ALTERAÇÃO IMPORTANTE AQUI ---
+                        // Informamos ao adapter para usar o item_paciente2 e que não estamos em modo de seleção
+                        adapter = new PacienteAdapter(listaPacientes, R.layout.item_pacienteselect, SelecionarPaciente.this);
                         binding.recyclerViewPacientes.setAdapter(adapter);
                     } else {
                         adapter.updateList(listaPacientes);
@@ -167,40 +161,24 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
 
     @Override
     public void onSelectClick(Paciente paciente) {
-        // Este método não é usado nesta tela, então pode ficar vazio.
+        // Ação principal deste fragmento: devolver o paciente selecionado
+        Bundle result = new Bundle();
+        result.putString("pacienteId", paciente.getId());
+        result.putString("pacienteNome", paciente.getNome());
+        getParentFragmentManager().setFragmentResult("pacienteSelecionadoRequest", result);
+
+        // Volta para a tela anterior (HomeFragment)
+        navController.popBackStack();
     }
 
     @Override
     public void onEditClick(Paciente paciente) {
-        VerPacientesFragmentDirections.ActionVerPacientesFragmentToAdicionarPacientesFragment action =
-                VerPacientesFragmentDirections.actionVerPacientesFragmentToAdicionarPacientesFragment();
-        action.setPacienteId(paciente.getId());
-        navController.navigate(action);
+        // Não faz nada neste fragmento
     }
 
     @Override
     public void onDeleteClick(Paciente paciente) {
-        if (getContext() == null) return;
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Excluir Paciente")
-                .setMessage("Tem certeza que deseja excluir " + paciente.getNome() + "? Esta ação não pode ser desfeita.")
-                .setPositiveButton("Excluir", (dialog, which) -> {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        FirebaseDatabase.getInstance().getReference("pacientes")
-                                .child(user.getUid())
-                                .child(paciente.getId())
-                                .removeValue()
-                                .addOnSuccessListener(aVoid -> {
-                                    if(isAdded()) Toast.makeText(getContext(), "Paciente excluído.", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    if(isAdded()) Toast.makeText(getContext(), "Erro ao excluir.", Toast.LENGTH_SHORT).show();
-                                });
-                    }
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
+        // Não faz nada neste fragmento
     }
 
     @Override

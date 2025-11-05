@@ -122,12 +122,12 @@
 
         <!-- Botão para Agendar Nova Consulta -->
         <Button
-            android:id="@+id/btnAgendarConsulta"
+            android:id="@+id/btnNovaConsulta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:padding="12dp"
-            android:text="Agendar Nova Consulta"
+            android:text="Nova Consulta"
             android:textAllCaps="false"
             android:textSize="16sp"
             app:backgroundTint="@color/verde_claro"

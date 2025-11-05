@@ -10,7 +10,21 @@
         android:id="@+id/menu_home"
         android:name="com.example.nutri3.fragments.menu.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <!-- Ação para a tela de seleção de paciente -->
+        <action
+            android:id="@+id/action_menu_home_to_selecionarPaciente"
+            app:destination="@id/selecionarPaciente" />
+
+        <!-- MUDANÇA 1: Ações para ir do Home para Avaliação ou Dieta -->
+        <action
+            android:id="@+id/action_menu_home_to_avaliacaoFragment"
+            app:destination="@id/avaliacaoFragment" />
+        <action
+            android:id="@+id/action_menu_home_to_dietaFragment"
+            app:destination="@id/dietaFragment" />
+
+    </fragment>
     <fragment
         android:id="@+id/menu_consults"
         android:name="com.example.nutri3.fragments.menu.ConsultsFragment"
@@ -23,7 +37,7 @@
         android:label="fragment_config"
         tools:layout="@layout/fragment_config" />
 
-    <!-- A ação global agora consegue "enxergar" o registerFragment -->
+    <!-- Ações e Fragmentos Globais -->
     <action
         android:id="@+id/action_global_to_registerFragment"
         app:destination="@id/registerFragment">
@@ -32,7 +46,6 @@
             android:defaultValue="false"
             app:argType="boolean" />
     </action>
-
 
     <fragment
         android:id="@+id/registerFragment"
@@ -43,6 +56,41 @@
             android:name="isEditMode"
             android:defaultValue="false"
             app:argType="boolean" />
+    </fragment>
+
+    <!-- Fragmento de Seleção de Paciente -->
+    <fragment
+        android:id="@+id/selecionarPaciente"
+        android:name="com.example.nutri3.fragments.consultas.SelecionarPaciente"
+        android:label="SelecionarPaciente" />
+    <!-- Ações para Dieta/Avaliação a partir daqui foram movidas para o Home -->
+
+    <!-- MUDANÇA 2: Fragmento de Dieta agora aceita um pacienteId -->
+    <fragment
+        android:id="@+id/dietaFragment"
+        android:name="com.example.nutri3.fragments.DietaFragment"
+        android:label="DietaFragment" >
+        <argument
+            android:name="pacienteId"
+            app:argType="string" />
+    </fragment>
+
+    <!-- MUDANÇA 3: Fragmento de Avaliação agora aceita argumentos e pode navegar para Dieta -->
+    <fragment
+        android:id="@+id/avaliacaoFragment"
+        android:name="com.example.nutri3.fragments.AvaliacaoFragment"
+        android:label="fragment_avaliacao"
+        tools:layout="@layout/fragment_avaliacao" >
+        <argument
+            android:name="pacienteId"
+            app:argType="string" />
+        <argument
+            android:name="navegarParaDietaAposConcluir"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_avaliacaoFragment_to_dietaFragment"
+            app:destination="@id/dietaFragment" />
     </fragment>
 
 </navigation>

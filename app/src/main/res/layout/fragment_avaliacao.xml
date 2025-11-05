@@ -1,243 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AvaliacaoFragment"
-    android:background="@color/beige"
-    android:orientation="vertical">
+    android:fillViewport="true">
 
-    <!-- Cabeçalho -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:context=".fragments.AvaliacaoFragment">
 
-        <ImageButton
+        <!-- Barra de Título, Medidas Básicas e Resultados (Sem alterações) -->
+        <ImageView
             android:id="@+id/btnVoltar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Voltar"
+            android:padding="4dp"
             android:src="@drawable/outline_arrow_back_24"
-            android:background="@color/beige"
-            android:scaleType="fitCenter"
-            android:contentDescription="Voltar"/>
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Avaliação Física"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btnVoltar"
+            app:layout_constraintEnd_toStartOf="@id/btnSalvarAvaliacao"
+            app:layout_constraintStart_toEndOf="@id/btnVoltar"
+            app:layout_constraintTop_toTopOf="@id/btnVoltar" />
+        <Button
+            android:id="@+id/btnSalvarAvaliacao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Avaliação Física"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:layout_gravity="center"
-            android:layout_marginStart="60dp"/>
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/logo"
-            android:layout_marginLeft="15dp"
-
-            />
-
-
-    </LinearLayout>
-
-    <!-- Conteúdo da avaliação -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:text="Salvar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPeso"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-
-            android:padding="10dp">
-
-            <!-- Peso e Altura -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/container_backgroundborder"
-                >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Peso e Altura"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                />
-            <EditText
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Peso (kg)"
+            app:layout_constraintEnd_toStartOf="@+id/tilAltura"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSalvarAvaliacao">
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPeso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="Peso (kg)"/>
-            <EditText
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAltura"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="Altura (m)"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tilPeso"
+            app:layout_constraintTop_toTopOf="@id/tilPeso">
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAltura"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="Altura (m)"/>
-           </LinearLayout>
-
-            <!-- Circunferências -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/container_backgroundborder"
-                android:layout_marginTop="8dp"
-                >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Circunferências (cm)"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"/>
-            <EditText android:id="@+id/etCintura"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Cintura"/>
-            <EditText android:id="@+id/etQuadril"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Quadril"/>
-            <EditText android:id="@+id/etBraco"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Braço"/>
-            <EditText android:id="@+id/etCoxa"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Coxa"/>
-            <EditText android:id="@+id/etPanturrilha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Panturrilha"/>
-        </LinearLayout>
-
-            <!-- Dobras cutâneas -->
-        <LinearLayout
-            android:layout_width="match_parent"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/labelIMC"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/container_backgroundborder"
+            android:layout_marginTop="24dp"
+            android:text="IMC:"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilPeso" />
+        <TextView
+            android:id="@+id/tvIMC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelIMC"
+            app:layout_constraintStart_toEndOf="@id/labelIMC"
+            tools:text="24.5" />
+        <TextView
+            android:id="@+id/labelGordura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="% Gordura:"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelIMC" />
+        <TextView
+            android:id="@+id/tvPercentualGordura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelGordura"
+            app:layout_constraintStart_toEndOf="@id/labelGordura"
+            tools:text="15.2%" />
+
+
+        <!-- Seção de Dobras Cutâneas (mm) -->
+        <TextView
+            android:id="@+id/labelDobras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Dobras Cutâneas (mm)"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelGordura" />
+
+        <!-- CAMPOS COMUNS PARA AS DOBRAS -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilTriceps"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dobras Cutâneas (mm)"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"/>
-            <EditText android:id="@+id/etTriceps"
+            android:layout_marginEnd="8dp"
+            android:hint="Tríceps"
+            app:layout_constraintEnd_toStartOf="@+id/tilSuprailiaca"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelDobras">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTriceps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tríceps"/>
-            <EditText android:id="@+id/etSubescapular"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSuprailiaca"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="Suprailíaca"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tilTriceps"
+            app:layout_constraintTop_toTopOf="@id/tilTriceps">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSuprailiaca"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Subescapular"/>
-            <EditText android:id="@+id/etSuprailiaca"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCoxa"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Coxa"
+            app:layout_constraintEnd_toStartOf="@+id/tilSubescapular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilTriceps">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCoxa"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Supra-ilíaca"/>
-            <EditText android:id="@+id/etAbdominal"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSubescapular"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="Subescapular"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tilCoxa"
+            app:layout_constraintTop_toTopOf="@id/tilCoxa">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSubescapular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Abdominal"/>
-            <EditText android:id="@+id/etCoxaDobras"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAbdominal"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Abdominal"
+            app:layout_constraintEnd_toStartOf="@+id/tilAxilar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilCoxa">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAbdominal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Coxa"/>
-        </LinearLayout>
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAxilar"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="Axilar Média"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tilAbdominal"
+            app:layout_constraintTop_toTopOf="@id/tilAbdominal">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAxilar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- IMC calculado -->
-            <!-- IMC calculado -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="IMC"
-                android:textSize="18sp"
-                android:layout_marginTop="16dp"/>
-            <TextView
-                android:id="@+id/tvIMC"
+
+        <!-- MUDANÇA: Campos específicos para cada Gênero. Começam invisíveis. -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPeitoral"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Peitoral"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/tilCristaIliaca"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilAbdominal"
+            tools:visibility="visible">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPeitoral"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0.0"
-                android:textSize="18sp"
-                android:padding="8dp"
-                android:background="#EFEFEF"/>
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Massa corporal -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Massa gorda (%)"
-                android:textSize="18sp"
-                android:layout_marginTop="16dp"/>
-            <TextView
-                android:id="@+id/tvMassaGorda"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCristaIliaca"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="Crista Ilíaca "
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tilPeitoral"
+            app:layout_constraintTop_toTopOf="@id/tilPeitoral"
+            tools:visibility="visible">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCristaIliaca"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0.0"
-                android:textSize="18sp"
-                android:padding="8dp"
-                android:background="#EFEFEF"/>
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Massa muscular (%)"
-                android:textSize="18sp"
-                android:layout_marginTop="16dp"/>
-            <TextView
-                android:id="@+id/tvMassaMuscular"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0.0"
-                android:textSize="18sp"
-                android:padding="8dp"
-                android:background="#EFEFEF"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Massa óssea (%)"
-                android:textSize="18sp"
-                android:layout_marginTop="16dp"/>
-            <TextView
-                android:id="@+id/tvMassaOssea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0.0"
-                android:textSize="18sp"
-                android:padding="8dp"
-                android:background="#EFEFEF"/>
-
-
-            <!-- Botão Salvar -->
-            <Button
-                android:id="@+id/btnSalvarAvaliacao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Salvar Avaliação"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/verde_claro"
-                android:textColor="@android:color/white"/>
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

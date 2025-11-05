@@ -17,12 +17,6 @@
         <action
             android:id="@+id/action_hostPacientes_to_adicionarPacientes"
             app:destination="@id/adicionarPacientesFragment" />
-        <action
-            android:id="@+id/action_hostPacientesFragment_to_avaliacaoFragment"
-            app:destination="@id/avaliacaoFragment" />
-        <action
-            android:id="@+id/action_hostPacientesFragment_to_dietaFragment"
-            app:destination="@id/dietaFragment" />
     </fragment>
 
     <!-- VerPacientesFragment AGORA TEM UMA AÇÃO PARA "EDITAR" -->
@@ -53,19 +47,6 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
-    </fragment>
-    <fragment
-        android:id="@+id/dietaFragment"
-        android:name="com.example.nutri3.fragments.DietaFragment"
-        android:label="DietaFragment" />
-    <fragment
-        android:id="@+id/avaliacaoFragment"
-        android:name="com.example.nutri3.fragments.AvaliacaoFragment"
-        android:label="fragment_avaliacao"
-        tools:layout="@layout/fragment_avaliacao" >
-        <action
-            android:id="@+id/action_avaliacaoFragment_to_dietaFragment"
-            app:destination="@id/dietaFragment" />
     </fragment>
 
 </navigation>

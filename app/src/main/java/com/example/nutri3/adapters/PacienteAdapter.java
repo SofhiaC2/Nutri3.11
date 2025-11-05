@@ -1,75 +1,72 @@
 package com.example.nutri3.adapters;
 
-import android.app.AlertDialog;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView; // Import necessário
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation; // Import necessário
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nutri3.R; // Import necessário
+import com.example.nutri3.R;
+import com.example.nutri3.databinding.ItemPacienteselectBinding;
 import com.example.nutri3.databinding.ItemPacienteBinding;
-import com.example.nutri3.fragments.consultas.Paciente; // Importe seu modelo Paciente
-import com.example.nutri3.fragments.consultas.VerPacientesFragmentDirections; // Import da classe gerada pelo Safe Args
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.nutri3.fragments.consultas.Paciente; // Assumindo que seu modelo está em '.../model/Paciente'
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.PacienteViewHolder> implements Filterable {
+public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseViewHolder> implements Filterable {
 
-    // --- MUDANÇA 1: Interface para comunicar cliques ao Fragment ---
+    // --- MUDANÇA 1: Interface agora inclui o onSelectClick ---
     public interface OnPacienteInteractionListener {
+        void onSelectClick(Paciente paciente); // Adicionado para a tela de seleção
         void onEditClick(Paciente paciente);
         void onDeleteClick(Paciente paciente);
     }
 
     private final List<Paciente> listaCompletaPacientes;
     private List<Paciente> listaFiltradaPacientes;
-    private final OnPacienteInteractionListener listener; // Armazena a referência ao listener
+    private final OnPacienteInteractionListener listener;
+    private final int layoutId; // Variável para guardar o ID do layout a ser usado
 
-
-
-    public void updateList(List<Paciente> novaLista) {
-        // Atualiza a lista completa que é usada como base para a filtragem
-        this.listaCompletaPacientes.clear();
-        this.listaCompletaPacientes.addAll(novaLista);
-
-        // A lista filtrada (que é a exibida) também é atualizada.
-        // O filtro será reaplicado pelo Fragment, se houver texto na busca.
-        this.listaFiltradaPacientes.clear();
-        this.listaFiltradaPacientes.addAll(novaLista);
-    }
-
-
-
-    public PacienteAdapter(List<Paciente> listaPacientes, OnPacienteInteractionListener listener) {
+    // --- MUDANÇA 2: Construtor que recebe o ID do Layout ---
+    public PacienteAdapter(List<Paciente> listaPacientes, int layoutId, OnPacienteInteractionListener listener) {
         this.listaCompletaPacientes = new ArrayList<>(listaPacientes);
         this.listaFiltradaPacientes = new ArrayList<>(listaPacientes);
-        this.listener = listener; // Atribui o listener
+        this.layoutId = layoutId; // Armazena o ID (R.layout.item_paciente ou R.layout.item_paciente2)
+        this.listener = listener;
     }
+
+
+    // Dentro da classe PacienteAdapter.java
 
     @NonNull
     @Override
-    public PacienteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemPacienteBinding binding = ItemPacienteBinding.inflate(inflater, parent, false);
-        return new PacienteViewHolder(binding);
+        View view = inflater.inflate(this.layoutId, parent, false);
+
+        // --- CORREÇÃO FINAL ---
+        // Fazemos o "bind" diretamente na classe específica do Binding,
+        // o que retorna o tipo correto sem a necessidade de conversões (casts)
+        // ou ambiguidades para o compilador.
+        if (this.layoutId == R.layout.item_paciente) {
+            ItemPacienteBinding binding = ItemPacienteBinding.bind(view);
+            return new PacienteNormalViewHolder(binding);
+        } else {
+            ItemPacienteselectBinding binding = ItemPacienteselectBinding.bind(view);
+            return new PacienteSelectViewHolder(binding);
+        }
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull PacienteViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         Paciente pacienteAtual = listaFiltradaPacientes.get(position);
-        // --- MUDANÇA 3: Passa o paciente e o listener para o ViewHolder ---
         holder.bind(pacienteAtual, listener);
     }
 
@@ -78,35 +75,61 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.Pacien
         return listaFiltradaPacientes.size();
     }
 
-    // --- MUDANÇA 4: ViewHolder agora configura os cliques ---
-    static class PacienteViewHolder extends RecyclerView.ViewHolder {
+    // --- MUDANÇA 4: ViewHolder Base e Específicos ---
+
+    // ViewHolder Base
+    abstract static class BaseViewHolder extends RecyclerView.ViewHolder {
+        public BaseViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+        abstract void bind(Paciente paciente, OnPacienteInteractionListener listener);
+    }
+
+    // ViewHolder para a tela NORMAL (com editar e excluir)
+    static class PacienteNormalViewHolder extends BaseViewHolder {
         private final ItemPacienteBinding binding;
 
-        public PacienteViewHolder(ItemPacienteBinding binding) {
+        public PacienteNormalViewHolder(ItemPacienteBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        public void bind(final Paciente paciente, final OnPacienteInteractionListener listener) {
+        @Override
+        void bind(final Paciente paciente, final OnPacienteInteractionListener listener) {
             binding.tvNomePacienteItem.setText(paciente.getNome());
             binding.tvEmailPacienteItem.setText(paciente.getEmail());
 
-            // Configura o clique no ícone de EDITAR
             binding.ivEditarPaciente.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onEditClick(paciente);
-                }
+                if (listener != null) listener.onEditClick(paciente);
             });
 
-            // Configura o clique no ícone de EXCLUIR
             binding.ivExcluirPaciente.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onDeleteClick(paciente);
-                }
+                if (listener != null) listener.onDeleteClick(paciente);
             });
         }
     }
 
+    // ViewHolder para a tela de SELEÇÃO
+    static class PacienteSelectViewHolder extends BaseViewHolder {
+        private final ItemPacienteselectBinding binding;
+
+        public PacienteSelectViewHolder(ItemPacienteselectBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        @Override
+        void bind(final Paciente paciente, final OnPacienteInteractionListener listener) {
+            binding.tvNomePacienteItem.setText(paciente.getNome());
+            binding.tvEmailPacienteItem.setText(paciente.getEmail());
+
+            binding.btnSelecionar.setOnClickListener(v -> {
+                if (listener != null) listener.onSelectClick(paciente);
+            });
+        }
+    }
+
+    // O código do filtro não precisa de alterações
     @Override
     public Filter getFilter() {
         return filtroPaciente;
@@ -116,7 +139,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.Pacien
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Paciente> listaSugerida = new ArrayList<>();
-
             if (constraint == null || constraint.length() == 0) {
                 listaSugerida.addAll(listaCompletaPacientes);
             } else {
@@ -127,7 +149,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.Pacien
                     }
                 }
             }
-
             FilterResults results = new FilterResults();
             results.values = listaSugerida;
             return results;
@@ -136,8 +157,18 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.Pacien
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             listaFiltradaPacientes.clear();
-            listaFiltradaPacientes.addAll((List) results.values);
+            if (results.values != null) {
+                listaFiltradaPacientes.addAll((List) results.values);
+            }
             notifyDataSetChanged();
         }
     };
+
+    // O método updateList também não precisa de alterações
+    public void updateList(List<Paciente> novaLista) {
+        this.listaCompletaPacientes.clear();
+        this.listaCompletaPacientes.addAll(novaLista);
+        this.listaFiltradaPacientes.clear();
+        this.listaFiltradaPacientes.addAll(novaLista);
+    }
 }
