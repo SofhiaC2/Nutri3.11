@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/beige">
 
-    <!-- AppBar com sombra -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -40,7 +39,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Conteúdo -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -78,7 +76,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Botão fixo no rodapé -->
     <Button
         android:id="@+id/btnInscrever"
         android:layout_width="0dp"

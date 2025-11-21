@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/beige">
 
-    <!-- Cabeçalho -->
     <LinearLayout
         android:id="@+id/cabecalho"
         android:layout_width="0dp"
@@ -32,7 +31,6 @@
             android:layout_marginStart="16dp"/>
     </LinearLayout>
 
-    <!-- Conteúdo rolável -->
     <ScrollView
         android:id="@+id/scrollViewCadastro"
         android:layout_width="0dp"
@@ -115,7 +113,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Botão fixo -->
     <Button
         android:id="@+id/btnInscrever"
         android:layout_width="0dp"

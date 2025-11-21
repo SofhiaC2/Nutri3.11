@@ -7,7 +7,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class Paciente {
 
     @Exclude
-    private String id; // ID do paciente (chave do nó no Firebase)
+    private String id;
 
     private String nome;
     private String dataNascimento;
@@ -15,9 +15,8 @@ public class Paciente {
     private String telefone;
     private String genero;
     private String observacoes;
-    private String nutricionistaId; // Novo campo para armazenar o ID do usuário logado
+    private String nutricionistaId;
 
-    // Construtor vazio para o Firebase
     public Paciente() {
     }
 
@@ -28,11 +27,8 @@ public class Paciente {
         this.telefone = telefone;
         this.genero = genero;
         this.observacoes = observacoes;
-        this.nutricionistaId = nutricionistaId; // Atribui o ID do nutricionista
+        this.nutricionistaId = nutricionistaId;
     }
-
-    // --- Getters e Setters para todos os campos ---
-    // (incluindo para nutricionistaId)
 
     @Exclude
     public String getId() { return id; }

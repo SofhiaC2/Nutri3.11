@@ -12,7 +12,6 @@
         android:padding="16dp"
         tools:context=".fragments.AvaliacaoFragment">
 
-        <!-- Barra de Título, Medidas Básicas e Resultados (Sem alterações) -->
         <ImageView
             android:id="@+id/btnVoltar"
             android:layout_width="40dp"
@@ -116,7 +115,6 @@
             tools:text="15.2%" />
 
 
-        <!-- Seção de Dobras Cutâneas (mm) -->
         <TextView
             android:id="@+id/labelDobras"
             android:layout_width="wrap_content"
@@ -128,7 +126,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labelGordura" />
 
-        <!-- CAMPOS COMUNS PARA AS DOBRAS -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilTriceps"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -230,7 +227,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <!-- MUDANÇA: Campos específicos para cada Gênero. Começam invisíveis. -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPeitoral"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

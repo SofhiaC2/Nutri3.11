@@ -48,7 +48,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ==== CAFÉ DA MANHÃ ==== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +77,6 @@
             android:layout_height="wrap_content"
             android:text="+ Adicionar alimento" />
 
-        <!-- ==== ALMOÇO ==== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,7 +107,6 @@
             android:layout_height="wrap_content"
             android:text="+ Adicionar alimento" />
 
-        <!-- ==== CAFÉ DA TARDE ==== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -140,7 +137,6 @@
             android:layout_height="wrap_content"
             android:text="+ Adicionar alimento" />
 
-        <!-- ==== JANTAR ==== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -171,7 +167,6 @@
             android:layout_height="wrap_content"
             android:text="+ Adicionar alimento" />
 
-        <!-- ==== CEIA ==== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -202,7 +197,6 @@
             android:layout_height="wrap_content"
             android:text="+ Adicionar alimento" />
 
-        <!-- ==== TOTAL DO DIA ==== -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

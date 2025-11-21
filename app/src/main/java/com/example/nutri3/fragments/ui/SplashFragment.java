@@ -33,21 +33,19 @@ public class SplashFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (!isAdded()) return; // Garante que o fragmento ainda está na tela
+            if (!isAdded()) return;
 
             NavController navController = NavHostFragment.findNavController(this);
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
             if (currentUser != null) {
-                // Usuário JÁ está logado, troca para o grafo principal.
                 Log.d(TAG, "Usuário logado. Trocando para nav_main.");
                 NavGraph mainGraph = navController.getNavInflater().inflate(R.navigation.nav_main);
                 navController.setGraph(mainGraph, null);
             } else {
-                // Usuário não está logado, vai para a tela de login.
                 Log.d(TAG, "Usuário não logado. Indo para LoginFragment.");
                 navController.navigate(R.id.action_splashFragment_to_loginFragment);
             }
-        }, 1500); // Atraso de 1.5s para a splash ser vista
+        }, 1500);
     }
 }

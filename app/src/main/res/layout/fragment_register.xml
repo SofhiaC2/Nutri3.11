@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/beige"
-    tools:context=".fragments.ui.RegisterFragment"> <!-- Contexto aponta para RegisterFragment -->
+    tools:context=".fragments.ui.RegisterFragment">
 
-    <!-- Barra de Título (Toolbar) -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -23,7 +22,6 @@
             android:background="@color/beige_dark"
             app:contentInsetStart="0dp">
 
-            <!-- O ID 'btnVoltar' corresponde ao esperado no seu código Java -->
             <ImageView
                 android:id="@+id/btnVoltar"
                 android:layout_width="40dp"
@@ -48,7 +46,6 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Conteúdo do formulário com scroll -->
     <ScrollView
         android:id="@+id/scrollViewCadastro"
         android:layout_width="0dp"
@@ -67,7 +64,6 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- Nome -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,7 +79,6 @@
                 android:inputType="textPersonName|textCapWords"
                 android:padding="12dp" />
 
-            <!-- Data de nascimento -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,7 +95,6 @@
                 android:maxLength="10"
                 android:padding="12dp" />
 
-            <!-- Email -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -116,7 +110,6 @@
                 android:inputType="textEmailAddress"
                 android:padding="12dp" />
 
-            <!-- Senha -->
             <TextView
                 android:id="@+id/tvSenhaLabel"
                 android:layout_width="wrap_content"
@@ -133,7 +126,6 @@
                 android:inputType="textPassword"
                 android:padding="12dp" />
 
-            <!-- Confirmar senha -->
             <TextView
                 android:id="@+id/tvConfirmSenhaLabel"
                 android:layout_width="wrap_content"
@@ -152,7 +144,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Botão fixo no rodapé -->
     <Button
         android:id="@+id/btnInscrever"
         android:layout_width="0dp"

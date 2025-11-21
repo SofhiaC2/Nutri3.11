@@ -1,36 +1,29 @@
-// No seu arquivo model/Avaliacao.java
-
-package com.example.nutri3.model; // Verifique se o pacote está correto
+package com.example.nutri3.model;
 
 public class Avaliacao {
 
     private double peso;
     private double altura;
 
-    // --- NOVOS CAMPOS PARA AS 7 DOBRAS ---
     private double triceps;
     private double suprailiaca;
     private double coxa;
     private double subescapular;
     private double abdominal;
-    private double peitoral; // Campo que estava faltando
-    private double axilar;   // Campo que estava faltando
+    private double peitoral;
+    private double axilar;
 
     private double cristaIliaca;
 
-    // Construtor vazio é essencial para o Firebase
-
-    public double getCristaIliaca() { // <-- NOVO GETTER
+    public double getCristaIliaca() {
         return cristaIliaca;
     }
 
-    public void setCristaIliaca(double cristaIliaca) { // <-- NOVO SETTER
+    public void setCristaIliaca(double cristaIliaca) {
         this.cristaIliaca = cristaIliaca;
     }
 
     public Avaliacao() {}
-
-    // --- GETTERS E SETTERS PARA TODOS OS CAMPOS ---
 
     public double getPeso() {
         return peso;

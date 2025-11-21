@@ -14,9 +14,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.nutri3.R; // Import do R para acessar layouts
+import com.example.nutri3.R;
 import com.example.nutri3.adapters.PacienteAdapter;
-import com.example.nutri3.databinding.FragmentVerPacientesBinding; // Usando o binding do seu novo layout
+import com.example.nutri3.databinding.FragmentVerPacientesBinding; // Pode manter este binding, já que o layout é o mesmo
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,10 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// Renomeado para SelecionarPacienteFragment e implementando a interface do Adapter
 public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPacienteInteractionListener {
 
-    // O binding agora é do tipo correto para o seu novo layout
     private FragmentVerPacientesBinding binding;
     private NavController navController;
     private PacienteAdapter adapter;
@@ -39,10 +37,24 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
     private ValueEventListener pacientesValueEventListener;
     private DatabaseReference userPacientesRef;
 
+    // Argumentos recebidos do HomeFragment
+    private boolean incluiAvaliacao;
+    private boolean incluiDieta;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Recebe os argumentos de forma segura
+        if (getArguments() != null) {
+            incluiAvaliacao = SelecionarPacienteArgs.fromBundle(getArguments()).getIncluiAvaliacao();
+            incluiDieta = SelecionarPacienteArgs.fromBundle(getArguments()).getIncluiDieta();
+        }
+    }
+
+    // onCreateView e onViewCreated podem continuar iguais
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Infla o layout correto
         binding = FragmentVerPacientesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -58,10 +70,42 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
         carregarPacientesDoFirebase();
     }
 
+
+    // ================== A LÓGICA DE CLIQUE MUDA COMPLETAMENTE ==================
+    @Override
+    public void onSelectClick(Paciente paciente) {
+        // Agora, este método faz a navegação final
+        if (incluiAvaliacao) {
+            // Caso 1: Avaliação está marcada (pode ou não incluir dieta depois)
+            SelecionarPacienteDirections.ActionSelecionarPacienteToAvaliacaoFragment action =
+                    SelecionarPacienteDirections.actionSelecionarPacienteToAvaliacaoFragment(paciente.getId());
+
+            // Informa ao AvaliacaoFragment se ele precisa navegar para a dieta ao concluir
+            action.setNavegarParaDietaAposConcluir(incluiDieta);
+
+            navController.navigate(action);
+
+        } else if (incluiDieta) {
+            // Caso 2: Apenas Dieta está marcada
+            SelecionarPacienteDirections.ActionSelecionarPacienteToDietaFragment action =
+                    SelecionarPacienteDirections.actionSelecionarPacienteToDietaFragment(paciente.getId());
+            navController.navigate(action);
+        }
+    }
+    // =========================================================================
+
+    // Os outros métodos da interface podem ficar vazios
+    @Override
+    public void onEditClick(Paciente paciente) {}
+
+    @Override
+    public void onDeleteClick(Paciente paciente) {}
+
+    // Todos os outros métodos (setupToolbar, carregarPacientesDoFirebase, etc.) podem permanecer exatamente os mesmos.
+    // Omitidos para brevidade.
     private void setupToolbar() {
-        // Os IDs do seu novo layout já estão corretos
         binding.btnVerPacientesVoltar.setOnClickListener(v -> navController.popBackStack());
-        binding.tvToolbarTitleVerPacientes.setText("Selecione o Paciente"); // Ajustando o título
+        binding.tvToolbarTitleVerPacientes.setText("Selecione o Paciente");
     }
 
     private void setupRecyclerView() {
@@ -107,8 +151,6 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
                 } else {
                     showRecyclerView();
                     if (adapter == null) {
-                        // --- ALTERAÇÃO IMPORTANTE AQUI ---
-                        // Informamos ao adapter para usar o item_paciente2 e que não estamos em modo de seleção
                         adapter = new PacienteAdapter(listaPacientes, R.layout.item_pacienteselect, SelecionarPaciente.this);
                         binding.recyclerViewPacientes.setAdapter(adapter);
                     } else {
@@ -155,30 +197,6 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
         binding.recyclerViewPacientes.setVisibility(View.GONE);
         binding.tvListaVazia.setVisibility(View.VISIBLE);
         binding.tvListaVazia.setText(message);
-    }
-
-    // --- Implementação dos métodos da interface ---
-
-    @Override
-    public void onSelectClick(Paciente paciente) {
-        // Ação principal deste fragmento: devolver o paciente selecionado
-        Bundle result = new Bundle();
-        result.putString("pacienteId", paciente.getId());
-        result.putString("pacienteNome", paciente.getNome());
-        getParentFragmentManager().setFragmentResult("pacienteSelecionadoRequest", result);
-
-        // Volta para a tela anterior (HomeFragment)
-        navController.popBackStack();
-    }
-
-    @Override
-    public void onEditClick(Paciente paciente) {
-        // Não faz nada neste fragmento
-    }
-
-    @Override
-    public void onDeleteClick(Paciente paciente) {
-        // Não faz nada neste fragmento
     }
 
     @Override

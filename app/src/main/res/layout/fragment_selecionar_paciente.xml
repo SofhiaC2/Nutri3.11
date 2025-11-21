@@ -7,7 +7,6 @@
     android:background="@color/beige"
     tools:context=".fragments.consultas.VerPacientesFragment">
 
-    <!-- Barra de Título (Toolbar) -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarVerPacientes"
         android:layout_width="0dp"
@@ -50,7 +49,6 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- NOVA BARRA DE PESQUISA -->
     <EditText
         android:id="@+id/etPesquisarPaciente"
         android:layout_width="0dp"
@@ -70,7 +68,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarVerPacientes" />
 
-    <!-- Lista de Pacientes (RecyclerView) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPacientes"
         android:layout_width="0dp"
@@ -87,7 +84,6 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <!-- Indicador de Carregamento (ProgressBar) -->
     <ProgressBar
         android:id="@+id/progressBarVerPacientes"
         style="?android:attr/progressBarStyle"
@@ -99,7 +95,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Mensagem para quando não houver pacientes -->
     <TextView
         android:id="@+id/tvListaVazia"
         android:layout_width="wrap_content"

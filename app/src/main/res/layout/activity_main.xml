@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Container para os fragmentos. Note que ele termina ACIMA da bottom navigation. -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -19,10 +18,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:navGraph="@navigation/nav_login" />
 
-    <!--
-        A BottomNavigationView QUE ESTAVA FALTANDO.
-        O ID dela é "bottom_navigation", que o View Binding usará para criar a variável.
-    -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"

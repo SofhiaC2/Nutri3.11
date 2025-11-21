@@ -19,7 +19,7 @@
             android:name=".MenuActivity"
             android:exported="false" />
         <activity
-            android:name=".CadastroActivity"
+            android:name=".DialogoNovaConsultaActivity$CadastroFragment"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

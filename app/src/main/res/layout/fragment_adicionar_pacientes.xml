@@ -5,9 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/beige">
-<!--    tools:context=".fragments.pacientes.AddPacienteFragment"> -->
-
-    <!-- DENTRO DE res/layout/fragment_adicionar_pacientes.xml -->
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarAddPaciente"
@@ -17,7 +14,6 @@
         app:elevation="6dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- SUBSTITUA SUA TOOLBAR ANTIGA POR ESTA -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarAddPaciente"
             android:layout_width="match_parent"
@@ -26,12 +22,10 @@
             app:contentInsetStart="0dp"
             android:elevation="0dp" >
 
-            <!-- Usamos um ConstraintLayout para ter controle total da posição -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- 1. SETA DE VOLTAR: Ancorada no início (esquerda) do pai -->
                 <ImageView
                     android:id="@+id/btnAddPacienteVoltar"
                     android:layout_width="50dp"
@@ -47,7 +41,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginStart="8dp"/>
 
-                <!-- 2. TÍTULO: Ancorado no centro horizontal do pai -->
                 <TextView
                     android:id="@+id/tvToolbarTitleAddPaciente"
                     android:layout_width="wrap_content"
@@ -55,7 +48,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:text=""
-                    tools:text="Título da Tela"
+                    tools:text="Adicione o paciente:"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -64,9 +57,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- O resto do seu arquivo (ScrollView, Button, etc.) permanece igual -->
-
 
 
     <ScrollView
@@ -87,7 +77,6 @@ app:layout_constraintEnd_toEndOf="parent">
     android:orientation="vertical"
     android:padding="8dp">
 
-    <!-- Nome Completo -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -104,7 +93,6 @@ app:layout_constraintEnd_toEndOf="parent">
     android:inputType="textPersonName|textCapWords"
     android:padding="12dp"/>
 
-    <!-- Data de Nascimento -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -123,7 +111,6 @@ app:layout_constraintEnd_toEndOf="parent">
     android:clickable="true"
     android:padding="12dp"/>
 
-    <!-- Email -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -88,7 +88,6 @@ public class AvaliacaoFragment extends Fragment {
                     if (pacienteAtual != null) {
                         Log.d(TAG, "Paciente carregado. Gênero: " + pacienteAtual.getGenero());
                         binding.tvTitulo.setText("Avaliação de " + pacienteAtual.getNome().split(" ")[0]);
-                        // MUDANÇA: Controla a visibilidade dos campos aqui
                         atualizarVisibilidadeCamposPorGenero();
                     }
                 } else {
@@ -110,7 +109,7 @@ public class AvaliacaoFragment extends Fragment {
         if (pacienteAtual.getGenero().equalsIgnoreCase("Masculino")) {
             binding.tilPeitoral.setVisibility(View.VISIBLE);
             binding.tilCristaIliaca.setVisibility(View.GONE);
-        } else { // Feminino
+        } else {
             binding.tilPeitoral.setVisibility(View.GONE);
             binding.tilCristaIliaca.setVisibility(View.VISIBLE);
         }
@@ -125,7 +124,6 @@ public class AvaliacaoFragment extends Fragment {
             }
         };
 
-        // Aplica o listener a todos os campos
         binding.etPeso.addTextChangedListener(calculosWatcher);
         binding.etAltura.addTextChangedListener(calculosWatcher);
         binding.etTriceps.addTextChangedListener(calculosWatcher);
@@ -134,7 +132,7 @@ public class AvaliacaoFragment extends Fragment {
         binding.etSubescapular.addTextChangedListener(calculosWatcher);
         binding.etAbdominal.addTextChangedListener(calculosWatcher);
         binding.etPeitoral.addTextChangedListener(calculosWatcher);
-        binding.etCristaIliaca.addTextChangedListener(calculosWatcher); // Adicionado
+        binding.etCristaIliaca.addTextChangedListener(calculosWatcher);
         binding.etAxilar.addTextChangedListener(calculosWatcher);
     }
 
@@ -152,7 +150,6 @@ public class AvaliacaoFragment extends Fragment {
             return;
         }
 
-        // MUDANÇA: Soma das dobras agora é específica para cada gênero
         double somaDobras;
         if (pacienteAtual.getGenero().equalsIgnoreCase("Masculino")) {
             somaDobras = parseDoubleOrZero(binding.etPeitoral.getText().toString()) +
@@ -162,7 +159,7 @@ public class AvaliacaoFragment extends Fragment {
                     parseDoubleOrZero(binding.etSubescapular.getText().toString()) +
                     parseDoubleOrZero(binding.etSuprailiaca.getText().toString()) +
                     parseDoubleOrZero(binding.etAxilar.getText().toString());
-        } else { // Feminino
+        } else {
             somaDobras = parseDoubleOrZero(binding.etCristaIliaca.getText().toString()) +
                     parseDoubleOrZero(binding.etAbdominal.getText().toString()) +
                     parseDoubleOrZero(binding.etCoxa.getText().toString()) +
@@ -187,7 +184,7 @@ public class AvaliacaoFragment extends Fragment {
         double densidadeCorporal;
         if (pacienteAtual.getGenero().equalsIgnoreCase("Masculino")) {
             densidadeCorporal = 1.112 - (0.00043499 * somaDobras) + (0.00000055 * (somaDobras * somaDobras)) - (0.00028826 * idade);
-        } else { // Feminino
+        } else {
             densidadeCorporal = 1.097 - (0.00046971 * somaDobras) + (0.00000056 * (somaDobras * somaDobras)) - (0.00012828 * idade);
         }
 
@@ -264,7 +261,7 @@ public class AvaliacaoFragment extends Fragment {
             dadosAtuais.setAbdominal(parseDoubleOrZero(binding.etAbdominal.getText().toString()));
             dadosAtuais.setPeitoral(parseDoubleOrZero(binding.etPeitoral.getText().toString()));
             dadosAtuais.setAxilar(parseDoubleOrZero(binding.etAxilar.getText().toString()));
-            dadosAtuais.setCristaIliaca(parseDoubleOrZero(binding.etCristaIliaca.getText().toString())); // Adicionado
+            dadosAtuais.setCristaIliaca(parseDoubleOrZero(binding.etCristaIliaca.getText().toString()));
         } catch (Exception e) {
             Toast.makeText(getContext(), "Erro ao processar os dados.", Toast.LENGTH_SHORT).show();
             return false;

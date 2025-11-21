@@ -16,10 +16,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.nutri3.R; // Import do R para acessar layouts
+import com.example.nutri3.R;
 import com.example.nutri3.adapters.PacienteAdapter;
 import com.example.nutri3.databinding.FragmentVerPacientesBinding;
-// Se o seu modelo Paciente estiver em outro pacote, ajuste o import
 import com.example.nutri3.fragments.consultas.Paciente;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,7 +60,6 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
     }
 
     private void setupToolbar() {
-        // Altera o título para o propósito desta tela
         binding.tvToolbarTitleVerPacientes.setText("Meus Pacientes");
         binding.btnVerPacientesVoltar.setOnClickListener(v -> navController.popBackStack());
     }
@@ -109,12 +107,7 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
                 } else {
                     showRecyclerView();
                     if (adapter == null) {
-                        // =====================================================================
-                        // ================ AQUI ESTÁ A ÚNICA ALTERAÇÃO ========================
-                        // Usamos o novo construtor, passando o ID do layout para este fragment.
-                        // =====================================================================
                         adapter = new PacienteAdapter(listaPacientes, R.layout.item_paciente, VerPacientesFragment.this);
-                        // =====================================================================
 
                         binding.recyclerViewPacientes.setAdapter(adapter);
                     } else {
@@ -163,20 +156,19 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
         binding.tvListaVazia.setText(message);
     }
 
-    // --- Implementação dos métodos da interface ---
-
     @Override
     public void onSelectClick(Paciente paciente) {
-        // Este método não é usado nesta tela, então pode ficar vazio.
     }
 
     @Override
     public void onEditClick(Paciente paciente) {
-        VerPacientesFragmentDirections.ActionVerPacientesFragmentToAdicionarPacientesFragment action =
-                VerPacientesFragmentDirections.actionVerPacientesFragmentToAdicionarPacientesFragment();
+        // O nome do método agora corresponde ao ID da action que você criou
+        VerPacientesFragmentDirections.ActionVerPacientesFragmentToAdicionarPacientesFragment2 action =
+                VerPacientesFragmentDirections.actionVerPacientesFragmentToAdicionarPacientesFragment2();
         action.setPacienteId(paciente.getId());
         navController.navigate(action);
     }
+
 
     @Override
     public void onDeleteClick(Paciente paciente) {

@@ -17,7 +17,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Ícone e Informações do Paciente (à esquerda) -->
         <ImageView
             android:id="@+id/ivIconePaciente"
             android:layout_width="48dp"
@@ -61,7 +60,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="joao.silva@email.com" />
 
-        <!-- Botão de Selecionar (Sempre visível neste layout) -->
         <Button
             android:id="@+id/btnSelecionar"
             style="@style/Widget.Material3.Button.TextButton"

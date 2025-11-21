@@ -18,7 +18,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.nutri3.R;
 import com.example.nutri3.databinding.FragmentAdicionarPacientesBinding;
-import com.example.nutri3.fragments.consultas.Paciente; // Verifique se o import do modelo Paciente está correto
+import com.example.nutri3.fragments.consultas.Paciente;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,14 +40,12 @@ public class AdicionarPacientesFragment extends Fragment {
     private NavController navController;
     private DatabaseReference userPacientesRef;
 
-    // Variáveis para controlar o modo
     private boolean isEditMode = false;
     private String pacienteIdParaEditar = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 1. Verifica se estamos em modo de edição
         if (getArguments() != null) {
             pacienteIdParaEditar = AdicionarPacientesFragmentArgs.fromBundle(getArguments()).getPacienteId();
             if (pacienteIdParaEditar != null) {
@@ -80,7 +78,6 @@ public class AdicionarPacientesFragment extends Fragment {
         setupGeneroSpinner();
         setupToolbar();
 
-        // 2. Configura a UI com base no modo (Adicionar ou Editar)
         if (isEditMode) {
             setupEditMode();
         } else {
@@ -200,7 +197,6 @@ public class AdicionarPacientesFragment extends Fragment {
         return new Paciente(nome, dataNasc, email, telefone, genero, observacoes, nutricionistaId);
     }
 
-    // Seus métodos de setup e validação permanecem os mesmos
     private void setupDatePicker() {
         DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
             calendario.set(Calendar.YEAR, year);
@@ -231,8 +227,7 @@ public class AdicionarPacientesFragment extends Fragment {
         binding.spinnerGeneroPaciente.setAdapter(adapter);
     }
     private boolean validarCampos() {
-        // Seu método de validação...
-        return true; // Simplificado para o exemplo
+        return true;
     }
 
     @Override

@@ -1,45 +1,62 @@
 package com.example.nutri3.fragments.menu;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.Toast;
 
-// Imports necessários
 import com.example.nutri3.R;
-import com.example.nutri3.databinding.FragmentHomeBinding; // Import do ViewBinding
+import com.example.nutri3.databinding.FragmentHomeBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
-
-    // MUDANÇA 1: Usar ViewBinding para acessar as views
     private FragmentHomeBinding binding;
     private NavController navController;
-
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private FirebaseUser currentUser;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    // Para o diálogo de agendamento
+    private final Calendar calendar = Calendar.getInstance();
+    private ValueEventListener proximaConsultaListener;
+    private Query proximaConsultaQuery;
+    private int limiteConsultas = 3;
+    private final java.util.List<DataSnapshot> listaConsultas = new java.util.ArrayList<>();
+
+
+    public HomeFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,15 +64,10 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        // MUDANÇA 2: Configurar o "ouvinte" para receber o paciente selecionado
-        setupFragmentResultListener();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // MUDANÇA 3: Inflar o layout usando ViewBinding
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -67,102 +79,222 @@ public class HomeFragment extends Fragment {
 
         if (currentUser != null) {
             loadUserName(currentUser.getUid());
+            // Anexa o listener para carregar a consulta
+            carregarProximaConsulta(currentUser.getUid());
         } else {
-            Log.w(TAG, "Usuário atual é nulo no HomeFragment.");
+            Log.w(TAG, "Usuário não autenticado.");
             binding.tvGreeting.setText("Olá!");
+            binding.tvSemConsultas.setText("Faça login para ver seus agendamentos.");
+            binding.tvSemConsultas.setVisibility(View.VISIBLE);
         }
 
-        // MUDANÇA 4: Configurar o clique do botão "Nova Consulta"
-        // (Assumindo que o botão no seu fragment_home.xml tem o ID 'btnNovaConsulta')
-        binding.btnNovaConsulta.setOnClickListener(v -> {
-            // Navega para a tela de seleção de paciente
-            navController.navigate(R.id.action_menu_home_to_selecionarPaciente);
-        });
+        // Ação correta: Botão de agendamento rápido abre o diálogo.
+        // O ID do botão no XML agora é 'btnAgendarConsulta'.
+        binding.btnAgendarConsulta.setOnClickListener(v -> exibirDialogoAgendamento());
     }
 
-    private void setupFragmentResultListener() {
-        // Este listener fica ativo e espera o SelecionarPacienteFragment enviar um resultado
-        getParentFragmentManager().setFragmentResultListener("pacienteSelecionadoRequest", this, (requestKey, bundle) -> {
-            // Este código é executado QUANDO o usuário seleciona um paciente e volta
-            String pacienteId = bundle.getString("pacienteId");
-            String pacienteNome = bundle.getString("pacienteNome");
 
-            if (pacienteId != null && pacienteNome != null) {
-                // Paciente recebido com sucesso, agora mostre o diálogo de opções
-                showOpcoesConsultaDialog(pacienteId, pacienteNome);
+    // Em HomeFragment.java
+
+    private void exibirDialogoAgendamento() {
+        if (getContext() == null || currentUser == null) return;
+
+        // Infla o layout do diálogo (você precisa criar dialog_agendar_consulta.xml)
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_agendar_consulta, null);
+        final EditText etNome = dialogView.findViewById(R.id.etNomePacienteConsulta);
+        final EditText etTelefone = dialogView.findViewById(R.id.etTelefonePacienteConsulta);
+        final EditText etData = dialogView.findViewById(R.id.etDataConsulta);
+        final EditText etHora = dialogView.findViewById(R.id.etHoraConsulta);
+
+        // MÁSCARA AUTOMÁTICA PARA DATA (DD/MM/AAAA)
+        etData.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating;
+            private String old = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString().replaceAll("[^\\d]", "");
+                String fmt = old.replaceAll("[^\\d]", "");
+                if (isUpdating || str.equals(fmt)) {
+                    isUpdating = false;
+                    return;
+                }
+
+                String formatted = "";
+                if (str.length() > 0) {
+                    if (str.length() <= 2) {
+                        formatted = str;
+                    } else if (str.length() <= 4) {
+                        formatted = str.substring(0, 2) + "/" + str.substring(2);
+                    } else {
+                        formatted = str.substring(0, 2) + "/" + str.substring(2, 4) + "/" + str.substring(4, Math.min(str.length(), 8));
+                    }
+                }
+
+                isUpdating = true;
+                old = formatted;
+                etData.setText(formatted);
+                etData.setSelection(formatted.length());
             }
         });
-    }
 
-    // Dentro da classe HomeFragment.java
+        // MÁSCARA AUTOMÁTICA PARA HORA (HH:MM)
+        etHora.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating;
+            private String old = "";
 
-    private void showOpcoesConsultaDialog(String pacienteId, String pacienteNome) {
-        // Infla o layout do diálogo que você criou
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialogo_nova_consulta, null);
-        final CheckBox cbAvaliacao = dialogView.findViewById(R.id.cbAvaliacao);
-        final CheckBox cbDieta = dialogView.findViewById(R.id.cbDieta);
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString().replaceAll("[^\\d]", "");
+                if (isUpdating || str.equals(old) || str.length() > 4) {
+                    isUpdating = false;
+                    return;
+                }
+
+                String formatted = str;
+                if (str.length() >= 3) {
+                    formatted = str.substring(0, 2) + ":" + str.substring(2);
+                }
+
+                isUpdating = true;
+                old = str;
+                etHora.setText(formatted);
+                etHora.setSelection(formatted.length());
+            }
+        });
+
+        // Constrói e exibe o diálogo
         new AlertDialog.Builder(requireContext())
                 .setView(dialogView)
-                .setTitle("Nova Consulta para " + pacienteNome) // Título dinâmico
-                .setPositiveButton("Continuar", (dialog, which) -> {
-                    boolean incluiAvaliacao = cbAvaliacao.isChecked();
-                    boolean incluiDieta = cbDieta.isChecked();
+                // ================== BOTÃO ADICIONADO DE VOLTA ==================
+                .setPositiveButton("Agendar", (dialog, which) -> {
+                    String nome = etNome.getText().toString().trim();
+                    String dataStr = etData.getText().toString().trim();
+                    String horaStr = etHora.getText().toString().trim();
 
-                    if (!incluiAvaliacao && !incluiDieta) {
-                        Toast.makeText(getContext(), "Selecione ao menos uma opção.", Toast.LENGTH_SHORT).show();
-                        // Usamos um truque para não fechar o diálogo se a validação falhar,
-                        // mas a forma mais simples é reabri-lo ou simplesmente deixar fechar.
-                        // Por agora, o `return` impede a navegação.
+                    // Validação dos campos para os formatos esperados
+                    if (TextUtils.isEmpty(nome) || !dataStr.matches("\\d{2}/\\d{2}/\\d{4}") || !horaStr.matches("\\d{2}:\\d{2}")) {
+                        Toast.makeText(getContext(), "Preencha todos os campos corretamente (Nome, Data e Hora).", Toast.LENGTH_LONG).show();
                         return;
                     }
 
-                    // =======================================================
-                    // == NOVA LÓGICA DE NAVEGAÇÃO SEQUENCIAL
-                    // =======================================================
+                    // Tenta converter a data e hora para um timestamp
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                        sdf.setLenient(false); // Impede datas inválidas como "32/02/2025"
 
-                    if (incluiAvaliacao && incluiDieta) {
-                        // CENÁRIO 1: Ambos marcados -> Vai para Avaliação, com instrução para seguir para Dieta
-                        Log.d(TAG, "Navegando para Avaliação, depois para Dieta.");
-                        Toast.makeText(getContext(), "Iniciando Avaliação Física...", Toast.LENGTH_SHORT).show();
+                        long timestamp = sdf.parse(dataStr + " " + horaStr).getTime();
 
-                        // Supondo que você tem Safe Args configurado para a ação
-                        HomeFragmentDirections.ActionMenuHomeToAvaliacaoFragment action =
-                                HomeFragmentDirections.actionMenuHomeToAvaliacaoFragment(pacienteId);
+                        // Se a conversão deu certo, salva no Firebase
+                        salvarConsultaNoFirebase(nome, etTelefone.getText().toString().trim(), timestamp);
 
-                        // Passa o argumento extra para navegação sequencial
-                        action.setNavegarParaDietaAposConcluir(true);
-
-                        navController.navigate(action);
-
-                    } else if (incluiAvaliacao) {
-                        // CENÁRIO 2: Apenas Avaliação marcada -> Vai para Avaliação e para por aí
-                        Log.d(TAG, "Navegando apenas para Avaliação.");
-                        Toast.makeText(getContext(), "Iniciando Avaliação Física...", Toast.LENGTH_SHORT).show();
-
-                        HomeFragmentDirections.ActionMenuHomeToAvaliacaoFragment action =
-                                HomeFragmentDirections.actionMenuHomeToAvaliacaoFragment(pacienteId);
-
-                        // O valor padrão de 'navegarParaDietaAposConcluir' é false, então não precisa setar
-                        // action.setNavegarParaDietaAposConcluir(false); // Opcional, já é o padrão
-
-                        navController.navigate(action);
-
-                    } else { // incluiDieta é verdadeiro
-                        // CENÁRIO 3: Apenas Dieta marcada -> Vai direto para Dieta
-                        Log.d(TAG, "Navegando apenas para Dieta.");
-                        Toast.makeText(getContext(), "Iniciando Plano Alimentar...", Toast.LENGTH_SHORT).show();
-
-                        // Navega para a dieta passando o ID do paciente
-                        HomeFragmentDirections.ActionMenuHomeToDietaFragment action =
-                                HomeFragmentDirections.actionMenuHomeToDietaFragment(pacienteId);
-                        navController.navigate(action);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Data ou hora inválida.", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Erro ao fazer parse da data/hora digitada", e);
                     }
                 })
+                // ===============================================================
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
+
+    private void salvarConsultaNoFirebase(String nome, String telefone, long timestamp) {
+        String uid = currentUser.getUid();
+        String consultaId = mDatabase.child("agendamentos").child(uid).push().getKey();
+        if (consultaId == null) {
+            Toast.makeText(getContext(), "Erro ao criar agendamento.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, Object> dadosConsulta = new HashMap<>();
+        dadosConsulta.put("nomePaciente", nome);
+        dadosConsulta.put("telefonePaciente", telefone);
+        dadosConsulta.put("timestamp", timestamp);
+
+        mDatabase.child("agendamentos").child(uid).child(consultaId).setValue(dadosConsulta)
+                .addOnCompleteListener(task -> {
+                    if (isAdded()) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Consulta agendada com sucesso!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Falha ao agendar consulta.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void carregarProximaConsulta(String userId) {
+
+        binding.progressBarConsultas.setVisibility(View.VISIBLE);
+        binding.tvProximaConsultaInfo.setVisibility(View.GONE);
+        binding.tvSemConsultas.setVisibility(View.GONE);
+        binding.btnVerMaisConsultas.setVisibility(View.GONE);
+
+        DatabaseReference agendamentosRef = mDatabase.child("agendamentos").child(userId);
+        long agora = System.currentTimeMillis();
+
+        proximaConsultaQuery = agendamentosRef.orderByChild("timestamp").startAt(agora);
+
+        proximaConsultaListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (!isAdded()) return;
+
+                binding.progressBarConsultas.setVisibility(View.GONE);
+
+                listaConsultas.clear();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    listaConsultas.add(snap);
+                }
+
+                if (listaConsultas.isEmpty()) {
+                    binding.tvSemConsultas.setVisibility(View.VISIBLE);
+                    binding.tvProximaConsultaInfo.setVisibility(View.GONE);
+                    return;
+                }
+
+                mostrarConsultasNaTela();
+
+                if (listaConsultas.size() > limiteConsultas) {
+                    binding.btnVerMaisConsultas.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (!isAdded()) return;
+                binding.progressBarConsultas.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "Erro ao carregar consultas.", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        proximaConsultaQuery.addValueEventListener(proximaConsultaListener);
+
+        binding.btnVerMaisConsultas.setOnClickListener(v -> {
+
+            limiteConsultas += 3;
+
+            mostrarConsultasNaTela();
+
+            if (limiteConsultas >= listaConsultas.size()) {
+                binding.btnVerMaisConsultas.setVisibility(View.GONE);
+            }
+        });
+    }
 
 
     private void loadUserName(String userId) {
@@ -178,25 +310,56 @@ public class HomeFragment extends Fragment {
                     } else {
                         binding.tvGreeting.setText("Olá!");
                     }
-                } else if (isAdded()) {
-                    Log.w(TAG, "Dados do usuário não encontrados para o UID: " + userId);
-                    binding.tvGreeting.setText("Olá!");
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                if (isAdded()) {
-                    Log.e(TAG, "Falha ao carregar dados do usuário.", databaseError.toException());
-                    binding.tvGreeting.setText("Olá!");
-                }
+                if (isAdded()) Log.e(TAG, "Falha ao carregar nome do usuário.", databaseError.toException());
             }
         });
     }
+private void mostrarConsultasNaTela() {
 
-    @Override
+    StringBuilder builder = new StringBuilder();
+
+    int max = Math.min(limiteConsultas, listaConsultas.size());
+
+    SimpleDateFormat sdfData = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+    for (int i = 0; i < max; i++) {
+
+        DataSnapshot snap = listaConsultas.get(i);
+
+        String nome = snap.child("nomePaciente").getValue(String.class);
+        Long timestamp = snap.child("timestamp").getValue(Long.class);
+
+        if (nome != null && timestamp != null) {
+
+            String dataF = sdfData.format(timestamp);
+            String horaF = sdfHora.format(timestamp);
+
+            builder.append("• ").append(nome)
+                    .append("\n  Data: ").append(dataF)
+                    .append("  Hora: ").append(horaF)
+                    .append("\n\n");
+        }
+    }
+
+    binding.tvProximaConsultaInfo.setText(builder.toString().trim());
+
+    binding.tvProximaConsultaInfo.setVisibility(View.VISIBLE);
+    binding.tvSemConsultas.setVisibility(View.GONE);
+}
+
+
+@Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null; // Limpa a referência ao binding para evitar memory leaks
+        // Remove o listener para evitar memory leaks quando o fragmento for destruído
+        if (proximaConsultaQuery != null && proximaConsultaListener != null) {
+            proximaConsultaQuery.removeEventListener(proximaConsultaListener);
+        }
+        binding = null;
     }
 }

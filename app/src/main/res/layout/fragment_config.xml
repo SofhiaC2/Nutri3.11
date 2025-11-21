@@ -7,7 +7,6 @@
     android:background="@color/beige"
     tools:context=".fragments.menu.ConfigFragment">
 
-    <!-- Toolbar Simples (Permanece igual) -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarConfig"
         android:layout_width="match_parent"
@@ -31,7 +30,6 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- 1. Conteúdo Principal (Apenas a seção "Conta") -->
     <LinearLayout
         android:id="@+id/layout_opcoes_principais"
         android:layout_width="0dp"
@@ -42,7 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Seção Conta -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,8 +69,6 @@
     </LinearLayout>
 
 
-    <!-- 2. Rodapé de Ações (com "Sobre" e "Sair") -->
-    <!-- Este LinearLayout é ancorado na parte inferior da tela -->
     <LinearLayout
         android:id="@+id/rodape_acoes"
         android:layout_width="0dp"
@@ -86,7 +81,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Card "Sobre o App" -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardSobreApp"
             android:layout_width="match_parent"
@@ -105,7 +99,6 @@
                 android:drawablePadding="16dp"/>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card "Sair" com destaque -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardSair"
             android:layout_width="match_parent"
@@ -113,7 +106,7 @@
             android:clickable="true"
             android:focusable="true"
             app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/verde_claro"> <!-- Cor de fundo para destaque -->
+            app:cardBackgroundColor="@color/verde_claro">
 
             <TextView
                 android:layout_width="wrap_content"

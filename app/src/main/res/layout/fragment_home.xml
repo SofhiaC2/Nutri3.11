@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/beige"
-    tools:context=".fragments.menu.HomeFragment"> <!-- Ajuste o pacote se necessário -->
+    tools:context=".fragments.menu.HomeFragment">
 
-    <!-- Seção Superior: Logo e Saudação -->
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="80dp"
@@ -33,7 +32,6 @@
         app:layout_constraintStart_toEndOf="@+id/ivLogo"
         app:layout_constraintTop_toTopOf="@+id/ivLogo" />
 
-    <!-- Container Principal (com o fundo arredondado) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_principal"
         android:layout_width="0dp"
@@ -46,7 +44,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivLogo">
 
-        <!-- Título "Acesso Rápido" -->
         <TextView
             android:id="@+id/tvTituloAcessoRapido"
             android:layout_width="wrap_content"
@@ -57,13 +54,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Card de Destaque para a Próxima Consulta -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardProximaConsulta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,10 +68,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
                 android:background="@color/verde_menta"
-                >
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +79,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <!-- TextView que mostrará a informação da consulta -->
+                <!-- TextView para mostrar a próxima consulta -->
                 <TextView
                     android:id="@+id/tvProximaConsultaInfo"
                     android:layout_width="wrap_content"
@@ -95,9 +89,11 @@
                     android:drawablePadding="8dp"
                     android:gravity="center_vertical"
                     android:textSize="18sp"
-                    tools:text="Maria Joaquina - 14/11/2025 às 10:00" />
+                    android:visibility="gone"
+                    tools:text="Maria Joaquina - 14/11/2025 às 10:00"
+                    tools:visibility="visible" />
 
-                <!-- TextView que aparece quando não há consultas -->
+                <!-- TextView para quando não houver consultas -->
                 <TextView
                     android:id="@+id/tvSemConsultas"
                     android:layout_width="wrap_content"
@@ -108,29 +104,45 @@
                     android:visibility="gone"
                     tools:visibility="visible" />
 
-                <!-- ProgressBar para indicar carregamento -->
+                <!-- ProgressBar para indicar o carregamento -->
                 <ProgressBar
                     android:id="@+id/progressBarConsultas"
+                    style="?android:attr/progressBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:visibility="visible" />
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <!-- Botão Ver Mais, agora posicionado corretamente -->
+                <Button
+                    android:id="@+id/btnVerMaisConsultas"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="Ver todas"
+                    android:textAllCaps="false"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Botão para Agendar Nova Consulta -->
+        <!-- Botão para agendar uma nova consulta -->
         <Button
-            android:id="@+id/btnNovaConsulta"
+            android:id="@+id/btnAgendarConsulta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:backgroundTint="@color/verde_claro"
             android:padding="12dp"
-            android:text="Nova Consulta"
+            android:text="Agendar Consulta"
             android:textAllCaps="false"
             android:textSize="16sp"
-            app:backgroundTint="@color/verde_claro"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardProximaConsulta" />

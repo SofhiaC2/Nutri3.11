@@ -50,7 +50,6 @@
             app:layout_constraintTop_toBottomOf="@id/tvNomePacienteItem"
             tools:text="joao.silva@email.com" />
 
-        <!-- ÍCONE DE EXCLUIR (ADICIONADO) -->
         <ImageView
             android:id="@+id/ivExcluirPaciente"
             android:layout_width="36dp"
@@ -65,7 +64,6 @@
             app:layout_constraintTop_toTopOf="parent"
              />
 
-        <!-- ÍCONE DE EDITAR (ADICIONADO) -->
         <ImageView
             android:id="@+id/ivEditarPaciente"
             android:layout_width="32dp"

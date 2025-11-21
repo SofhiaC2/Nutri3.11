@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // 1. Procura o NavHostFragment pelo ID definido no XML.
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
 
@@ -47,15 +46,12 @@ public class MainActivity extends AppCompatActivity {
         navController = navHostFragment.getNavController();
         mAuth = FirebaseAuth.getInstance();
 
-        // 2. Define destinos de nível superior.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.menu_home, R.id.menu_consults, R.id.nav_pacientes, R.id.menu_config
+                R.id.menu_home, R.id.hostPacientesFragment2, R.id.menu_config
         ).build();
 
-        // 3. Conecta a BottomNavigationView ao NavController.
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
 
-        // 4. Inicializa o AuthStateListener.
         setupAuthStateListener();
     }
 
@@ -64,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             FirebaseUser user = firebaseAuth.getCurrentUser();
 
             if (user != null) {
-                // USUÁRIO LOGADO
                 if (navController.getGraph().getId() != R.id.nav_main) {
                     try {
                         navController.setGraph(R.navigation.nav_main);
@@ -75,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 binding.bottomNavigation.setVisibility(View.VISIBLE);
             } else {
-                // USUÁRIO NÃO LOGADO
                 if (navController.getGraph().getId() != R.id.nav_login) {
                     try {
                         navController.setGraph(R.navigation.nav_login);
@@ -103,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // 🔽 ADIÇÃO: Fecha o teclado ao tocar fora de um EditText 🔽
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {

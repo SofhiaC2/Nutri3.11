@@ -23,21 +23,25 @@
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
 
-        <!-- AÇÃO CORRIGIDA: Agora aponta para a ação global que você criou no nav_main.xml -->
-        <action
-            android:id="@+id/action_loginFragment_to_register"
-            app:destination="@id/action_global_to_registerFragment" />
+
 
         <action
             android:id="@+id/action_loginFragment_to_recover_accountFragment"
             app:destination="@id/recover_accountFragment" />
-    </fragment>
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
 
-    <!-- O registerFragment FOI REMOVIDO DESTE ARQUIVO -->
+    </fragment>
 
     <fragment
         android:id="@+id/recover_accountFragment"
         android:name="com.example.nutri3.fragments.ui.Recover_accountFragment"
         android:label="Recover_accountFragment" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.nutri3.fragments.ui.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
 
 </navigation>

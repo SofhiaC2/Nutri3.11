@@ -14,16 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.nutri3.R;
 import com.example.nutri3.databinding.ItemPacienteselectBinding;
 import com.example.nutri3.databinding.ItemPacienteBinding;
-import com.example.nutri3.fragments.consultas.Paciente; // Assumindo que seu modelo está em '.../model/Paciente'
+import com.example.nutri3.fragments.consultas.Paciente;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseViewHolder> implements Filterable {
 
-    // --- MUDANÇA 1: Interface agora inclui o onSelectClick ---
     public interface OnPacienteInteractionListener {
-        void onSelectClick(Paciente paciente); // Adicionado para a tela de seleção
+        void onSelectClick(Paciente paciente);
+
         void onEditClick(Paciente paciente);
         void onDeleteClick(Paciente paciente);
     }
@@ -31,18 +31,15 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseVi
     private final List<Paciente> listaCompletaPacientes;
     private List<Paciente> listaFiltradaPacientes;
     private final OnPacienteInteractionListener listener;
-    private final int layoutId; // Variável para guardar o ID do layout a ser usado
+    private final int layoutId;
 
-    // --- MUDANÇA 2: Construtor que recebe o ID do Layout ---
     public PacienteAdapter(List<Paciente> listaPacientes, int layoutId, OnPacienteInteractionListener listener) {
         this.listaCompletaPacientes = new ArrayList<>(listaPacientes);
         this.listaFiltradaPacientes = new ArrayList<>(listaPacientes);
-        this.layoutId = layoutId; // Armazena o ID (R.layout.item_paciente ou R.layout.item_paciente2)
+        this.layoutId = layoutId;
         this.listener = listener;
     }
 
-
-    // Dentro da classe PacienteAdapter.java
 
     @NonNull
     @Override
@@ -50,10 +47,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseVi
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(this.layoutId, parent, false);
 
-        // --- CORREÇÃO FINAL ---
-        // Fazemos o "bind" diretamente na classe específica do Binding,
-        // o que retorna o tipo correto sem a necessidade de conversões (casts)
-        // ou ambiguidades para o compilador.
         if (this.layoutId == R.layout.item_paciente) {
             ItemPacienteBinding binding = ItemPacienteBinding.bind(view);
             return new PacienteNormalViewHolder(binding);
@@ -75,9 +68,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseVi
         return listaFiltradaPacientes.size();
     }
 
-    // --- MUDANÇA 4: ViewHolder Base e Específicos ---
-
-    // ViewHolder Base
     abstract static class BaseViewHolder extends RecyclerView.ViewHolder {
         public BaseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,7 +75,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseVi
         abstract void bind(Paciente paciente, OnPacienteInteractionListener listener);
     }
 
-    // ViewHolder para a tela NORMAL (com editar e excluir)
     static class PacienteNormalViewHolder extends BaseViewHolder {
         private final ItemPacienteBinding binding;
 
@@ -109,7 +98,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseVi
         }
     }
 
-    // ViewHolder para a tela de SELEÇÃO
     static class PacienteSelectViewHolder extends BaseViewHolder {
         private final ItemPacienteselectBinding binding;
 
@@ -129,7 +117,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseVi
         }
     }
 
-    // O código do filtro não precisa de alterações
     @Override
     public Filter getFilter() {
         return filtroPaciente;
@@ -164,7 +151,6 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.BaseVi
         }
     };
 
-    // O método updateList também não precisa de alterações
     public void updateList(List<Paciente> novaLista) {
         this.listaCompletaPacientes.clear();
         this.listaCompletaPacientes.addAll(novaLista);

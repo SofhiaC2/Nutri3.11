@@ -1,4 +1,4 @@
-package com.example.nutri3.fragments.menu; // Ajuste o pacote se necessário
+package com.example.nutri3.fragments.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.nutri3.R;
@@ -39,27 +40,39 @@ public class ConfigFragment extends Fragment {
         setupClickListeners();
     }
 
+    // Em ConfigFragment.java
+
+    // Em ConfigFragment.java
+
     private void setupClickListeners() {
 
         binding.cardEditarPerfil.setOnClickListener(v -> {
+            // --- CORREÇÃO AQUI ---
+            // Agora usamos a ação direta que criamos, que é muito mais confiável.
             Bundle args = new Bundle();
             args.putBoolean("isEditMode", true);
-            NavHostFragment.findNavController(this).navigate(R.id.action_global_to_registerFragment,args);
+            NavHostFragment.findNavController(this).navigate(R.id.action_menu_config_to_registerFragment2, args);
         });
 
         binding.cardSair.setOnClickListener(v -> {
             mostrarDialogoSair();
         });
 
-        // --- PARTE QUE FALTAVA ---
-        // Adiciona a funcionalidade de clique para o card "Sobre o App"
         binding.cardSobreApp.setOnClickListener(v -> {
-            // Mostra uma mensagem simples. No futuro, você pode substituir isso
-            // por um diálogo mais elaborado com informações do app.
-            Toast.makeText(getContext(), "Nutri3 App v1.0\nDesenvolvido por [Seu Nome]", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Nutri3 App v1.0\nDesenvolvido por Sofhia", Toast.LENGTH_LONG).show();
         });
-        // --- FIM DA PARTE QUE FALTAVA ---
+
+
+
+        binding.cardSair.setOnClickListener(v -> {
+            mostrarDialogoSair();
+        });
+
+        binding.cardSobreApp.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Nutri3 App v1.0\nDesenvolvido por Sofhia", Toast.LENGTH_LONG).show();
+        });
     }
+
 
     private void mostrarDialogoSair() {
         if (getContext() == null) return;
@@ -68,24 +81,43 @@ public class ConfigFragment extends Fragment {
                 .setTitle("Sair da Conta")
                 .setMessage("Você tem certeza que deseja sair?")
                 .setPositiveButton("Sair", (dialog, which) -> {
-                    fazerLogout(); // Apenas chama o método
+                    fazerLogout();
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
+    // Em ConfigFragment.java
+
+    // Em ConfigFragment.java
+
+    // Em ConfigFragment.java
+
     private void fazerLogout() {
-        // --- INÍCIO DA ALTERAÇÃO CORRETA ---
-        // Apenas desconecte o usuário.
-        // O AuthStateListener na sua MainActivity fará o resto (trocar para nav_login).
         mAuth.signOut();
-        // Não é necessário criar um Intent ou finalizar a activity.
-        // ---- FIM DA ALTERAÇÃO CORRETA ----
+
+        if (getActivity() != null) {
+            // --- CORREÇÃO FINAL AQUI ---
+            // Troque "LoginFragment.class" pela sua Activity de login (Ex: LoginActivity.class)
+
+            // 👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇
+            Intent intent = new Intent(getActivity(), com.example.nutri3.MainActivity.class);
+            // 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
+
+
+            // Estas flags são essenciais: elas limpam a pilha de atividades.
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            startActivity(intent);
+            getActivity().finish(); // Finaliza a MainActivity atual
+        }
     }
+
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null; // Limpa a referência ao binding
+        binding = null;
     }
 }
