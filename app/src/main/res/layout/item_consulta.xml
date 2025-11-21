@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/tv_info_consulta_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16sp"
+        tools:text="• Nome Paciente\n  Data: 01/01/2025  Hora: 10:00" />
+
+    <ImageView
+        android:id="@+id/iv_delete_consulta"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/ic_menu_delete"
+        android:contentDescription="Excluir consulta"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:layout_marginStart="8dp"/>
+
+</LinearLayout>
