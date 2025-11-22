@@ -19,7 +19,6 @@ import com.example.nutri3.R;
 import com.example.nutri3.ViewModel.ConsultaViewModel;
 import com.example.nutri3.databinding.FragmentAvaliacaoBinding;
 import com.example.nutri3.model.Avaliacao;
-import com.example.nutri3.fragments.consultas.Paciente;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +30,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 public class AvaliacaoFragment extends Fragment {
 
@@ -38,20 +38,13 @@ public class AvaliacaoFragment extends Fragment {
     private FragmentAvaliacaoBinding binding;
     private NavController navController;
     private ConsultaViewModel consultaViewModel;
+
     private String pacienteId;
-    private Paciente pacienteAtual;
-    private boolean navegarParaDietaAposConcluir;
+    private String nomePaciente;
+    private String generoPaciente;
+    private String dataNascimentoPaciente;
 
     public AvaliacaoFragment() {}
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            pacienteId = AvaliacaoFragmentArgs.fromBundle(getArguments()).getPacienteId();
-            navegarParaDietaAposConcluir = AvaliacaoFragmentArgs.fromBundle(getArguments()).getNavegarParaDietaAposConcluir();
-        }
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,19 +57,36 @@ public class AvaliacaoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = NavHostFragment.findNavController(this);
         consultaViewModel = new ViewModelProvider(requireActivity()).get(ConsultaViewModel.class);
-        binding.btnVoltar.setOnClickListener(v -> navController.popBackStack());
-        buscarDadosDoPaciente();
+
+        // Busca o ID do paciente do ViewModel
+        consultaViewModel.getPacienteIdSelecionado().observe(getViewLifecycleOwner(), id -> {
+            if (id == null) {
+                Toast.makeText(getContext(), "Erro: ID do paciente não encontrado. Voltando...", Toast.LENGTH_LONG).show();
+                navController.popBackStack();
+            } else {
+                this.pacienteId = id;
+                buscarDadosDoPaciente();
+            }
+        });
+
+        // Observa os dados da avaliação no ViewModel para preencher a tela ao voltar
+        consultaViewModel.getDadosAvaliacao().observe(getViewLifecycleOwner(), avaliacao -> {
+            if (avaliacao != null) {
+                preencherCamposComDadosDoViewModel(avaliacao);
+            }
+        });
+
+        // A visibilidade do botão é controlada pelo layout da toolbar agora, então a linha abaixo foi removida.
+        // binding.btnAvancar.setVisibility(View.VISIBLE);
+
         setupCalculosTempoReal();
         setupClickListeners();
     }
 
     private void buscarDadosDoPaciente() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null || pacienteId == null) {
-            Toast.makeText(getContext(), "Erro: Paciente ou usuário não identificado.", Toast.LENGTH_LONG).show();
-            navController.popBackStack();
-            return;
-        }
+        if (currentUser == null || pacienteId == null) return;
+
         DatabaseReference pacienteRef = FirebaseDatabase.getInstance().getReference("pacientes")
                 .child(currentUser.getUid()).child(pacienteId);
 
@@ -84,11 +94,18 @@ public class AvaliacaoFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    pacienteAtual = snapshot.getValue(Paciente.class);
-                    if (pacienteAtual != null) {
-                        Log.d(TAG, "Paciente carregado. Gênero: " + pacienteAtual.getGenero());
-                        binding.tvTitulo.setText("Avaliação de " + pacienteAtual.getNome().split(" ")[0]);
+                    nomePaciente = snapshot.child("nome").getValue(String.class);
+                    generoPaciente = snapshot.child("genero").getValue(String.class);
+                    dataNascimentoPaciente = snapshot.child("dataNascimento").getValue(String.class);
+
+                    if (nomePaciente != null) {
+                        // **CORREÇÃO**: Atualiza o TextView do título dentro da Toolbar
+                        binding.tvTitulo.setText("Avaliação de " + nomePaciente.split(" ")[0]);
                         atualizarVisibilidadeCamposPorGenero();
+                        calcularIMCEPercentualGordura();
+                    } else {
+                        Toast.makeText(getContext(), "Nome do paciente não encontrado.", Toast.LENGTH_LONG).show();
+                        navController.popBackStack();
                     }
                 } else {
                     Toast.makeText(getContext(), "Não foi possível encontrar os dados do paciente.", Toast.LENGTH_LONG).show();
@@ -103,18 +120,56 @@ public class AvaliacaoFragment extends Fragment {
         });
     }
 
-    private void atualizarVisibilidadeCamposPorGenero() {
-        if (pacienteAtual == null || pacienteAtual.getGenero() == null) return;
+    private void setupClickListeners() {
+        // **CORREÇÃO**: O listener de voltar agora é no ícone de navegação da Toolbar
+        binding.toolbarAvaliacao.setNavigationOnClickListener(v -> navController.popBackStack());
 
-        if (pacienteAtual.getGenero().equalsIgnoreCase("Masculino")) {
-            binding.tilPeitoral.setVisibility(View.VISIBLE);
-            binding.tilCristaIliaca.setVisibility(View.GONE);
-        } else {
-            binding.tilPeitoral.setVisibility(View.GONE);
-            binding.tilCristaIliaca.setVisibility(View.VISIBLE);
-        }
+        // O listener do botão "Avançar" continua o mesmo, pois o ID do botão é o mesmo
+        binding.btnAvancar.setOnClickListener(v -> {
+            salvarDadosNoViewModel();
+            navController.navigate(R.id.action_avaliacaoFragment_to_dietaFragment);
+        });
     }
 
+    private void salvarDadosNoViewModel() {
+        Avaliacao dadosAtuais = new Avaliacao();
+        try {
+            dadosAtuais.setPeso(parseDoubleOrZero(binding.etPeso.getText().toString()));
+            dadosAtuais.setAltura(parseDoubleOrZero(binding.etAltura.getText().toString()));
+            dadosAtuais.setTriceps(parseDoubleOrZero(binding.etTriceps.getText().toString()));
+            dadosAtuais.setSuprailiaca(parseDoubleOrZero(binding.etSuprailiaca.getText().toString()));
+            dadosAtuais.setCoxa(parseDoubleOrZero(binding.etCoxa.getText().toString()));
+            dadosAtuais.setSubescapular(parseDoubleOrZero(binding.etSubescapular.getText().toString()));
+            dadosAtuais.setAbdominal(parseDoubleOrZero(binding.etAbdominal.getText().toString()));
+            dadosAtuais.setPeitoral(parseDoubleOrZero(binding.etPeitoral.getText().toString()));
+            dadosAtuais.setAxilar(parseDoubleOrZero(binding.etAxilar.getText().toString()));
+            dadosAtuais.setCristaIliaca(parseDoubleOrZero(binding.etCristaIliaca.getText().toString()));
+        } catch (Exception e) {
+            Log.e(TAG, "Erro ao converter dados para salvar no ViewModel", e);
+        }
+        consultaViewModel.atualizarDadosAvaliacao(dadosAtuais);
+    }
+
+    private void preencherCamposComDadosDoViewModel(Avaliacao avaliacao) {
+        if (avaliacao.getPeso() > 0) binding.etPeso.setText(String.format(Locale.US, "%.2f", avaliacao.getPeso()));
+        if (avaliacao.getAltura() > 0) binding.etAltura.setText(String.format(Locale.US, "%.2f", avaliacao.getAltura()));
+        if (avaliacao.getTriceps() > 0) binding.etTriceps.setText(String.format(Locale.US, "%.1f", avaliacao.getTriceps()));
+        if (avaliacao.getSuprailiaca() > 0) binding.etSuprailiaca.setText(String.format(Locale.US, "%.1f", avaliacao.getSuprailiaca()));
+        if (avaliacao.getCoxa() > 0) binding.etCoxa.setText(String.format(Locale.US, "%.1f", avaliacao.getCoxa()));
+        if (avaliacao.getSubescapular() > 0) binding.etSubescapular.setText(String.format(Locale.US, "%.1f", avaliacao.getSubescapular()));
+        if (avaliacao.getAbdominal() > 0) binding.etAbdominal.setText(String.format(Locale.US, "%.1f", avaliacao.getAbdominal()));
+        if (avaliacao.getPeitoral() > 0) binding.etPeitoral.setText(String.format(Locale.US, "%.1f", avaliacao.getPeitoral()));
+        if (avaliacao.getAxilar() > 0) binding.etAxilar.setText(String.format(Locale.US, "%.1f", avaliacao.getAxilar()));
+        if (avaliacao.getCristaIliaca() > 0) binding.etCristaIliaca.setText(String.format(Locale.US, "%.1f", avaliacao.getCristaIliaca()));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        salvarDadosNoViewModel();
+    }
+
+    //<editor-fold desc="Cálculos e helpers">
     private void setupCalculosTempoReal() {
         TextWatcher calculosWatcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -123,7 +178,6 @@ public class AvaliacaoFragment extends Fragment {
                 calcularIMCEPercentualGordura();
             }
         };
-
         binding.etPeso.addTextChangedListener(calculosWatcher);
         binding.etAltura.addTextChangedListener(calculosWatcher);
         binding.etTriceps.addTextChangedListener(calculosWatcher);
@@ -140,18 +194,18 @@ public class AvaliacaoFragment extends Fragment {
         double peso = parseDoubleOrZero(binding.etPeso.getText().toString());
         double altura = parseDoubleOrZero(binding.etAltura.getText().toString());
         if (altura > 0 && peso > 0) {
-            binding.tvIMC.setText(String.format("%.1f", peso / (altura * altura)));
+            binding.tvIMC.setText(String.format(Locale.US, "%.1f", peso / (altura * altura)));
         } else {
             binding.tvIMC.setText("0.0");
         }
 
-        if (pacienteAtual == null || pacienteAtual.getGenero() == null || TextUtils.isEmpty(pacienteAtual.getDataNascimento())) {
+        if (generoPaciente == null || TextUtils.isEmpty(dataNascimentoPaciente)) {
             binding.tvPercentualGordura.setText("0.0%");
             return;
         }
 
         double somaDobras;
-        if (pacienteAtual.getGenero().equalsIgnoreCase("Masculino")) {
+        if (generoPaciente.equalsIgnoreCase("Masculino")) {
             somaDobras = parseDoubleOrZero(binding.etPeitoral.getText().toString()) +
                     parseDoubleOrZero(binding.etAbdominal.getText().toString()) +
                     parseDoubleOrZero(binding.etCoxa.getText().toString()) +
@@ -159,7 +213,7 @@ public class AvaliacaoFragment extends Fragment {
                     parseDoubleOrZero(binding.etSubescapular.getText().toString()) +
                     parseDoubleOrZero(binding.etSuprailiaca.getText().toString()) +
                     parseDoubleOrZero(binding.etAxilar.getText().toString());
-        } else {
+        } else { // Feminino
             somaDobras = parseDoubleOrZero(binding.etCristaIliaca.getText().toString()) +
                     parseDoubleOrZero(binding.etAbdominal.getText().toString()) +
                     parseDoubleOrZero(binding.etCoxa.getText().toString()) +
@@ -169,20 +223,19 @@ public class AvaliacaoFragment extends Fragment {
                     parseDoubleOrZero(binding.etAxilar.getText().toString());
         }
 
-
         if (somaDobras <= 0) {
             binding.tvPercentualGordura.setText("0.0%");
             return;
         }
 
-        int idade = calcularIdade(pacienteAtual.getDataNascimento());
+        int idade = calcularIdade(dataNascimentoPaciente);
         if (idade <= 0) {
             binding.tvPercentualGordura.setText("0.0%");
             return;
         }
 
         double densidadeCorporal;
-        if (pacienteAtual.getGenero().equalsIgnoreCase("Masculino")) {
+        if (generoPaciente.equalsIgnoreCase("Masculino")) {
             densidadeCorporal = 1.112 - (0.00043499 * somaDobras) + (0.00000055 * (somaDobras * somaDobras)) - (0.00028826 * idade);
         } else {
             densidadeCorporal = 1.097 - (0.00046971 * somaDobras) + (0.00000056 * (somaDobras * somaDobras)) - (0.00012828 * idade);
@@ -191,7 +244,7 @@ public class AvaliacaoFragment extends Fragment {
         double percentualGordura = ((4.95 / densidadeCorporal) - 4.50) * 100;
 
         if (percentualGordura > 0 && percentualGordura < 100) {
-            binding.tvPercentualGordura.setText(String.format("%.1f%%", percentualGordura));
+            binding.tvPercentualGordura.setText(String.format(Locale.US, "%.1f%%", percentualGordura));
         } else {
             binding.tvPercentualGordura.setText("0.0%");
         }
@@ -202,72 +255,10 @@ public class AvaliacaoFragment extends Fragment {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate birthDate = LocalDate.parse(dataNascimento, formatter);
-            LocalDate currentDate = LocalDate.now();
-            return Period.between(birthDate, currentDate).getYears();
+            return Period.between(birthDate, LocalDate.now()).getYears();
         } catch (DateTimeParseException e) {
             return 0;
         }
-    }
-
-    private void setupClickListeners() {
-        binding.btnSalvarAvaliacao.setOnClickListener(v -> {
-            if (pacienteAtual == null) {
-                Toast.makeText(getContext(), "Aguarde os dados do paciente serem carregados.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (!validarEsalvarDados(true)) return;
-            Avaliacao avaliacaoCompleta = consultaViewModel.getAvaliacao().getValue();
-            if (avaliacaoCompleta != null) {
-                salvarAvaliacaoNoFirebase(avaliacaoCompleta);
-            }
-        });
-    }
-
-    private void salvarAvaliacaoNoFirebase(Avaliacao avaliacao) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) return;
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("avaliacoes")
-                .child(currentUser.getUid()).child(pacienteId).push();
-
-        ref.setValue(avaliacao).addOnSuccessListener(aVoid -> {
-            if (navegarParaDietaAposConcluir) {
-                Toast.makeText(getContext(), "Avaliação salva. Próximo passo: Plano Alimentar.", Toast.LENGTH_SHORT).show();
-                AvaliacaoFragmentDirections.ActionAvaliacaoFragmentToDietaFragment action =
-                        AvaliacaoFragmentDirections.actionAvaliacaoFragmentToDietaFragment(pacienteId);
-                navController.navigate(action);
-            } else {
-                Toast.makeText(getContext(), "Avaliação salva com sucesso!", Toast.LENGTH_SHORT).show();
-                if (consultaViewModel != null) consultaViewModel.limparDados();
-                navController.popBackStack(R.id.menu_home, false);
-            }
-        }).addOnFailureListener(e -> Toast.makeText(getContext(), "Falha ao salvar a avaliação.", Toast.LENGTH_SHORT).show());
-    }
-
-    private boolean validarEsalvarDados(boolean validarObrigatorios) {
-        if (validarObrigatorios) {
-            if (TextUtils.isEmpty(binding.etPeso.getText()) || TextUtils.isEmpty(binding.etAltura.getText())) {
-                Toast.makeText(getContext(), "Peso e Altura são obrigatórios.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-        Avaliacao dadosAtuais = new Avaliacao();
-        try {
-            dadosAtuais.setPeso(parseDoubleOrZero(binding.etPeso.getText().toString()));
-            dadosAtuais.setAltura(parseDoubleOrZero(binding.etAltura.getText().toString()));
-            dadosAtuais.setTriceps(parseDoubleOrZero(binding.etTriceps.getText().toString()));
-            dadosAtuais.setSuprailiaca(parseDoubleOrZero(binding.etSuprailiaca.getText().toString()));
-            dadosAtuais.setCoxa(parseDoubleOrZero(binding.etCoxa.getText().toString()));
-            dadosAtuais.setSubescapular(parseDoubleOrZero(binding.etSubescapular.getText().toString()));
-            dadosAtuais.setAbdominal(parseDoubleOrZero(binding.etAbdominal.getText().toString()));
-            dadosAtuais.setPeitoral(parseDoubleOrZero(binding.etPeitoral.getText().toString()));
-            dadosAtuais.setAxilar(parseDoubleOrZero(binding.etAxilar.getText().toString()));
-            dadosAtuais.setCristaIliaca(parseDoubleOrZero(binding.etCristaIliaca.getText().toString()));
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "Erro ao processar os dados.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        consultaViewModel.setAvaliacao(dadosAtuais);
-        return true;
     }
 
     private double parseDoubleOrZero(String value) {
@@ -278,6 +269,18 @@ public class AvaliacaoFragment extends Fragment {
             return 0.0;
         }
     }
+
+    private void atualizarVisibilidadeCamposPorGenero() {
+        if (generoPaciente == null) return;
+        if (generoPaciente.equalsIgnoreCase("Masculino")) {
+            binding.tilPeitoral.setVisibility(View.VISIBLE);
+            binding.tilCristaIliaca.setVisibility(View.GONE);
+        } else {
+            binding.tilPeitoral.setVisibility(View.GONE);
+            binding.tilCristaIliaca.setVisibility(View.VISIBLE);
+        }
+    }
+    //</editor-fold>
 
     @Override
     public void onDestroyView() {

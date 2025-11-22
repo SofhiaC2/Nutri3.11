@@ -3,7 +3,7 @@ package com.example.nutri3.fragments.menu;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+// import androidx.appcompat.app.AlertDialog; // Não é mais necessário
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -11,8 +11,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.Toast;
+// import android.widget.CheckBox; // Não é mais necessário
+// import android.widget.Toast; // Não é mais necessário para o diálogo
 
 import com.example.nutri3.R;
 import com.example.nutri3.databinding.FragmentPacienteshostBinding;
@@ -22,7 +22,6 @@ public class HostPacientesFragment extends Fragment {
 
     private FragmentPacienteshostBinding binding;
     private NavController navController;
-
     private ConsultaViewModel consultaViewModel;
 
     @Override
@@ -37,7 +36,6 @@ public class HostPacientesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = NavHostFragment.findNavController(this);
-
         consultaViewModel = new ViewModelProvider(requireActivity()).get(ConsultaViewModel.class);
 
         setupClickListeners();
@@ -55,9 +53,18 @@ public class HostPacientesFragment extends Fragment {
         binding.btnMenuVerPaciente.setOnClickListener(v -> {
             navController.navigate(R.id.action_hostPacientesFragment2_to_verPacientesFragment);
         });
+
+        // Ação do botão "Nova Consulta" foi simplificada
+        binding.btnNovaConsulta.setOnClickListener(v -> {
+            // Define que o fluxo sempre incluirá avaliação e dieta
+            consultaViewModel.setOpcoesConsulta(true, true);
+
+            // Navega diretamente para a seleção de paciente
+            navController.navigate(R.id.action_hostPacientesFragment2_to_selecionarPaciente);
+        });
     }
 
-
+    // O método exibirDialogoNovaConsulta() foi completamente removido.
 
     @Override
     public void onDestroyView() {

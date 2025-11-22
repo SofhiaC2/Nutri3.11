@@ -1,65 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Usaremos um LinearLayout como raiz para organizar a Toolbar e o conteúdo -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true">
+    android:orientation="vertical">
 
+    <!-- 1. Toolbar adicionada no topo -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarAgendamento"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/verde_claro"
+
+        app:title="Novo Agendamento"
+        app:titleTextColor="@android:color/white"/>
+
+    <!-- 2. O conteúdo agora fica dentro de um ScrollView separado -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:fillViewport="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Agendamento"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etNomePacienteConsulta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Nome do Paciente"
-            android:inputType="textPersonName|textCapWords" />
-
-        <EditText
-            android:id="@+id/etTelefonePacienteConsulta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Telefone (Opcional)"
-            android:inputType="phone" />
-
-        <!-- CAMPOS DE DATA E HORA MODIFICADOS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- O TextView do título foi removido, pois agora está na Toolbar -->
 
             <EditText
-                android:id="@+id/etDataConsulta"
-                android:layout_width="0dp"
+                android:id="@+id/etNomePacienteConsulta"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:hint="Data (DD/MM/AAAA)"
-                android:inputType="number"
-                android:maxLength="10" />
+                android:layout_marginTop="8dp"
+                android:hint="Nome do Paciente"
+                android:inputType="textPersonName|textCapWords" />
 
             <EditText
-                android:id="@+id/etHoraConsulta"
-                android:layout_width="0dp"
+                android:id="@+id/etTelefonePacienteConsulta"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:hint="Hora (HH:MM)"
-                android:inputType="number"
-                android:maxLength="5" />
+                android:layout_marginTop="16dp"
+                android:hint="Telefone (Opcional)"
+                android:inputType="phone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etDataConsulta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:hint="Data (DD/MM/AAAA)"
+                    android:inputType="date"
+                    android:maxLength="10" />
+
+                <EditText
+                    android:id="@+id/etHoraConsulta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="0.8"
+                    android:hint="Hora (HH:MM)"
+                    android:inputType="time"
+                    android:maxLength="5" />
+            </LinearLayout>
+
         </LinearLayout>
-
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

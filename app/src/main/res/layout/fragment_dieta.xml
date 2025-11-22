@@ -2,228 +2,252 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/white"
-        >
+        android:gravity="center_vertical">
+
         <ImageButton
             android:id="@+id/btnVoltar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/outline_arrow_back_24"
             android:background="@color/white"
+            android:contentDescription="Voltar"
             android:scaleType="fitCenter"
-            android:contentDescription="Voltar"/>
+            android:src="@drawable/outline_arrow_back_24" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:text="Montagem da dieta"
-            android:textStyle="bold"
             android:textSize="22sp"
-            android:layout_gravity="center"
-            android:layout_marginStart="60dp"/>
+            android:textStyle="bold" />
+
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/logo"
-            android:layout_marginLeft="15dp"
-            />
-
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/logo" />
 
     </LinearLayout>
-    <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/beige">
 
-
-    <LinearLayout
+    <!-- FrameLayout para permitir a sobreposição da ProgressBar -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <TextView
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/beige"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Café da Manhã -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:text="☕ Café da Manhã"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCafeManha"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@drawable/container_backgroundborder"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/tvTotaisCafeManha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnAddCafeManha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Adicionar alimento" />
+
+                <!-- Almoço -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="🍲 Almoço"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAlmoco"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@drawable/container_backgroundborder"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/tvTotaisAlmoco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnAddAlmoco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Adicionar alimento" />
+
+                <!-- Café da Tarde -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="🍎 Café da Tarde"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCafeTarde"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@drawable/container_backgroundborder"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/tvTotaisCafeTarde"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnAddCafeTarde"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Adicionar alimento" />
+
+                <!-- Jantar -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="🍽️ Jantar"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvJantar"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@drawable/container_backgroundone"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/tvTotaisJantar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnAddJantar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Adicionar alimento" />
+
+                <!-- Ceia -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="🥛 Ceia"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCeia"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@drawable/container_backgroundone"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/tvTotaisCeia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnAddCeia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Adicionar alimento" />
+
+                <!-- Totais e Botão Finalizar -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="8dp"
+                    android:text="📊 Totais do Dia"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTotaisDia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/container_backgroundborder"
+                    android:padding="8dp"
+                    android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnSalvar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:backgroundTint="@color/verde_claro"
+                    android:padding="12dp"
+                    android:text="Finalizar e Salvar Consulta"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- PROGRESSBAR ADICIONADA AQUI -->
+        <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="☕ Café da Manhã"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingBottom="8dp" />
+            android:layout_gravity="center"
+            android:visibility="gone" /> <!-- Começa invisível -->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCafeManha"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@drawable/container_backgroundborder"
-            android:padding="8dp"/>
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/tvTotaisCafeManha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
-            android:textStyle="bold"
-            android:padding="4dp" />
-
-        <Button
-            android:id="@+id/btnAddCafeManha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Adicionar alimento" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🍲 Almoço"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAlmoco"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@drawable/container_backgroundborder"
-            android:padding="8dp"/>
-
-        <TextView
-            android:id="@+id/tvTotaisAlmoco"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
-            android:textStyle="bold"
-            android:padding="4dp" />
-
-        <Button
-            android:id="@+id/btnAddAlmoco"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Adicionar alimento" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🍎 Café da Tarde"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCafeTarde"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@drawable/container_backgroundborder"
-            android:padding="8dp"/>
-
-        <TextView
-            android:id="@+id/tvTotaisCafeTarde"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
-            android:textStyle="bold"
-            android:padding="4dp" />
-
-        <Button
-            android:id="@+id/btnAddCafeTarde"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Adicionar alimento" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🍽️ Jantar"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvJantar"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@drawable/container_backgroundone"
-            android:padding="8dp"/>
-
-        <TextView
-            android:id="@+id/tvTotaisJantar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
-            android:textStyle="bold"
-            android:padding="4dp" />
-
-        <Button
-            android:id="@+id/btnAddJantar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Adicionar alimento" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🥛 Ceia"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCeia"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@drawable/container_backgroundone"
-            android:padding="8dp"/>
-
-        <TextView
-            android:id="@+id/tvTotaisCeia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
-            android:textStyle="bold"
-            android:padding="4dp" />
-
-        <Button
-            android:id="@+id/btnAddCeia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Adicionar alimento" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📊 Totais do Dia"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:paddingTop="24dp"
-            android:paddingBottom="8dp" />
-
-        <TextView
-            android:id="@+id/tvTotaisDia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Totais: Kcal 0 | Carb 0g | Prot 0g | Gord 0g"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:padding="8dp"
-            android:background="@drawable/container_backgroundborder" />
-       <Button
-        android:id="@+id/btnFinalizarConsulta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:padding="12dp"
-        android:text="Finalizar e Salvar Consulta"
-        android:textSize="18sp"
-        android:backgroundTint="@color/verde_claro"
-        android:textColor="@android:color/white"/>
-    </LinearLayout>
-</ScrollView></LinearLayout>
+</LinearLayout>

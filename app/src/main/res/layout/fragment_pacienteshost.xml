@@ -180,7 +180,7 @@
 
             <!-- CARD NOVA CONSULTA -->
             <LinearLayout
-                android:id="@+id/btnMenuNovaConsulta"
+                android:id="@+id/btnNovaConsulta"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="8dp"
@@ -224,7 +224,7 @@
                 android:padding="10dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintTop_toTopOf="@id/btnMenuNovaConsulta"
+                app:layout_constraintTop_toTopOf="@id/btnNovaConsulta"
                 app:layout_constraintStart_toEndOf="@id/guideline_vertical_center"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end_margin">
 
