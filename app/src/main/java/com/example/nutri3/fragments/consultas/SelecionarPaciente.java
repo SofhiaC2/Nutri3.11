@@ -12,13 +12,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider; // IMPORT NECESSÁRIO
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.nutri3.R;
-import com.example.nutri3.ViewModel.ConsultaViewModel; // IMPORT NECESSÁRIO
+import com.example.nutri3.ViewModel.ConsultaViewModel;
 import com.example.nutri3.adapters.PacienteAdapter;
 import com.example.nutri3.databinding.FragmentVerPacientesBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,18 +41,11 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
     private ValueEventListener pacientesValueEventListener;
     private DatabaseReference userPacientesRef;
 
-    // **NOVO**: Variável para o ViewModel
     private ConsultaViewModel consultaViewModel;
-
-    // **REMOVIDO**: As variáveis de argumentos não são mais necessárias
-    // private boolean incluiAvaliacao;
-    // private boolean incluiDieta;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // **REMOVIDO**: A lógica de receber argumentos foi removida.
-        // O ViewModel cuidará do estado.
     }
 
     @Nullable
@@ -67,7 +60,6 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
         super.onViewCreated(view, savedInstanceState);
         navController = NavHostFragment.findNavController(this);
 
-        // **NOVO**: Inicializa o ViewModel no escopo da Activity
         consultaViewModel = new ViewModelProvider(requireActivity()).get(ConsultaViewModel.class);
 
         setupToolbar();
@@ -77,7 +69,6 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
     }
 
 
-    // ================== A LÓGICA DE CLIQUE MUDA COMPLETAMENTE ==================
     @Override
     public void onSelectClick(Paciente paciente) {
         if (paciente == null || paciente.getId() == null) {
@@ -87,23 +78,17 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
 
         Log.d("SelecionarPaciente", "Paciente selecionado: " + paciente.getNome() + " com ID: " + paciente.getId());
 
-        // 1. Salva o ID do paciente selecionado no ViewModel
         consultaViewModel.selecionarPaciente(paciente.getId());
 
-        // 2. Navega para o próximo passo (que é sempre a Avaliação)
-        // Certifique-se que o nome da action está correto no seu nav_graph.xml
         navController.navigate(R.id.action_selecionarPaciente_to_avaliacaoFragment);
     }
-    // =========================================================================
 
-    // Os outros métodos da interface podem ficar vazios
     @Override
     public void onEditClick(Paciente paciente) {}
 
     @Override
     public void onDeleteClick(Paciente paciente) {}
 
-    // Todos os outros métodos (setupToolbar, carregarPacientesDoFirebase, etc.) permanecem os mesmos.
     private void setupToolbar() {
         binding.btnVerPacientesVoltar.setOnClickListener(v -> navController.popBackStack());
         binding.tvToolbarTitleVerPacientes.setText("Selecione o Paciente");
@@ -152,7 +137,6 @@ public class SelecionarPaciente extends Fragment implements PacienteAdapter.OnPa
                 } else {
                     showRecyclerView();
                     if (adapter == null) {
-                        // **IMPORTANTE**: Assumindo que seu adapter recebe 'this' como listener
                         adapter = new PacienteAdapter(listaPacientes, R.layout.item_pacienteselect, SelecionarPaciente.this);
                         binding.recyclerViewPacientes.setAdapter(adapter);
                     } else {

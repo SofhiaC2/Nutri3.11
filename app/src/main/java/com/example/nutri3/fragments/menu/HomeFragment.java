@@ -114,7 +114,6 @@ public class HomeFragment extends Fragment implements ConsultaAdapter.OnConsulta
                     listaConsultas.add(snap);
                 }
 
-                // Notifica o adapter que os dados mudaram
                 consultaAdapter.notifyDataSetChanged();
 
                 if (listaConsultas.isEmpty()) {
@@ -156,9 +155,6 @@ public class HomeFragment extends Fragment implements ConsultaAdapter.OnConsulta
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
-
-    // O resto do seu código (exibirDialogoAgendamento, salvarConsultaNoFirebase, loadUserName, onDestroyView) continua aqui...
-    // Vou colar eles abaixo para garantir.
 
     private void exibirDialogoAgendamento() {
         if (getContext() == null || currentUser == null) return;

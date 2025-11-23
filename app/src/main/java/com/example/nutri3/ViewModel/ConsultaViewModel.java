@@ -4,23 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.nutri3.model.Alimento;
 import com.example.nutri3.model.Avaliacao;
 import com.example.nutri3.model.Dieta;
+
+import java.util.Objects;
 
 public class ConsultaViewModel extends ViewModel {
 
     private final MutableLiveData<String> pacienteIdSelecionado = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> incluiAvaliacao = new MutableLiveData<>(false);
-    private final MutableLiveData<Boolean> incluiDieta = new MutableLiveData<>(false);
 
     private final MutableLiveData<Avaliacao> dadosAvaliacao = new MutableLiveData<>();
 
-    private final MutableLiveData<Dieta> dadosDieta = new MutableLiveData<>();
+    private final MutableLiveData<Dieta> dadosDieta = new MutableLiveData<>(new Dieta());
 
 
-    public void setOpcoesConsulta(boolean avaliacao, boolean dieta) {
-        incluiAvaliacao.setValue(avaliacao);
-        incluiDieta.setValue(dieta);
+    public void iniciarNovaConsulta() {
+        limparDados();
     }
 
     public void selecionarPaciente(String pacienteId) {
@@ -35,16 +35,37 @@ public class ConsultaViewModel extends ViewModel {
         dadosDieta.setValue(dieta);
     }
 
+    public void adicionarAlimento(Alimento novoAlimento, String tipoRefeicao) {
+        Dieta dietaAtual = dadosDieta.getValue();
+
+        if (dietaAtual == null) {
+            dietaAtual = new Dieta();
+        }
+
+        switch (tipoRefeicao) {
+            case "cafeDaManha":
+                dietaAtual.getCafeDaManha().add(novoAlimento);
+                break;
+            case "almoco":
+                dietaAtual.getAlmoco().add(novoAlimento);
+                break;
+            case "cafeDaTarde":
+                dietaAtual.getCafeDaTarde().add(novoAlimento);
+                break;
+            case "jantar":
+                dietaAtual.getJantar().add(novoAlimento);
+                break;
+            case "ceia":
+                dietaAtual.getCeia().add(novoAlimento);
+                break;
+        }
+
+        dadosDieta.setValue(dietaAtual);
+    }
+
+
     public LiveData<String> getPacienteIdSelecionado() {
         return pacienteIdSelecionado;
-    }
-
-    public LiveData<Boolean> getIncluiAvaliacao() {
-        return incluiAvaliacao;
-    }
-
-    public LiveData<Boolean> getIncluiDieta() {
-        return incluiDieta;
     }
 
     public LiveData<Avaliacao> getDadosAvaliacao() {
@@ -55,11 +76,10 @@ public class ConsultaViewModel extends ViewModel {
         return dadosDieta;
     }
 
+
     public void limparDados() {
         pacienteIdSelecionado.setValue(null);
-        incluiAvaliacao.setValue(false);
-        incluiDieta.setValue(false);
         dadosAvaliacao.setValue(null);
-        dadosDieta.setValue(null);
+        dadosDieta.setValue(new Dieta());
     }
 }

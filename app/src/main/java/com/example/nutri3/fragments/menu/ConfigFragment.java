@@ -40,15 +40,9 @@ public class ConfigFragment extends Fragment {
         setupClickListeners();
     }
 
-    // Em ConfigFragment.java
-
-    // Em ConfigFragment.java
-
     private void setupClickListeners() {
 
         binding.cardEditarPerfil.setOnClickListener(v -> {
-            // --- CORREÇÃO AQUI ---
-            // Agora usamos a ação direta que criamos, que é muito mais confiável.
             Bundle args = new Bundle();
             args.putBoolean("isEditMode", true);
             NavHostFragment.findNavController(this).navigate(R.id.action_menu_config_to_registerFragment2, args);
@@ -87,29 +81,18 @@ public class ConfigFragment extends Fragment {
                 .show();
     }
 
-    // Em ConfigFragment.java
-
-    // Em ConfigFragment.java
-
-    // Em ConfigFragment.java
-
     private void fazerLogout() {
         mAuth.signOut();
 
         if (getActivity() != null) {
-            // --- CORREÇÃO FINAL AQUI ---
-            // Troque "LoginFragment.class" pela sua Activity de login (Ex: LoginActivity.class)
 
-            // 👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇
             Intent intent = new Intent(getActivity(), com.example.nutri3.MainActivity.class);
-            // 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
 
 
-            // Estas flags são essenciais: elas limpam a pilha de atividades.
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             startActivity(intent);
-            getActivity().finish(); // Finaliza a MainActivity atual
+            getActivity().finish();
         }
     }
 

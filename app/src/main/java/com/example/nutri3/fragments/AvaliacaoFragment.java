@@ -58,7 +58,6 @@ public class AvaliacaoFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
         consultaViewModel = new ViewModelProvider(requireActivity()).get(ConsultaViewModel.class);
 
-        // Busca o ID do paciente do ViewModel
         consultaViewModel.getPacienteIdSelecionado().observe(getViewLifecycleOwner(), id -> {
             if (id == null) {
                 Toast.makeText(getContext(), "Erro: ID do paciente não encontrado. Voltando...", Toast.LENGTH_LONG).show();
@@ -69,15 +68,11 @@ public class AvaliacaoFragment extends Fragment {
             }
         });
 
-        // Observa os dados da avaliação no ViewModel para preencher a tela ao voltar
         consultaViewModel.getDadosAvaliacao().observe(getViewLifecycleOwner(), avaliacao -> {
             if (avaliacao != null) {
                 preencherCamposComDadosDoViewModel(avaliacao);
             }
         });
-
-        // A visibilidade do botão é controlada pelo layout da toolbar agora, então a linha abaixo foi removida.
-        // binding.btnAvancar.setVisibility(View.VISIBLE);
 
         setupCalculosTempoReal();
         setupClickListeners();
@@ -99,7 +94,6 @@ public class AvaliacaoFragment extends Fragment {
                     dataNascimentoPaciente = snapshot.child("dataNascimento").getValue(String.class);
 
                     if (nomePaciente != null) {
-                        // **CORREÇÃO**: Atualiza o TextView do título dentro da Toolbar
                         binding.tvTitulo.setText("Avaliação de " + nomePaciente.split(" ")[0]);
                         atualizarVisibilidadeCamposPorGenero();
                         calcularIMCEPercentualGordura();
@@ -121,10 +115,8 @@ public class AvaliacaoFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        // **CORREÇÃO**: O listener de voltar agora é no ícone de navegação da Toolbar
         binding.toolbarAvaliacao.setNavigationOnClickListener(v -> navController.popBackStack());
 
-        // O listener do botão "Avançar" continua o mesmo, pois o ID do botão é o mesmo
         binding.btnAvancar.setOnClickListener(v -> {
             salvarDadosNoViewModel();
             navController.navigate(R.id.action_avaliacaoFragment_to_dietaFragment);
@@ -169,7 +161,6 @@ public class AvaliacaoFragment extends Fragment {
         salvarDadosNoViewModel();
     }
 
-    //<editor-fold desc="Cálculos e helpers">
     private void setupCalculosTempoReal() {
         TextWatcher calculosWatcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -213,7 +204,7 @@ public class AvaliacaoFragment extends Fragment {
                     parseDoubleOrZero(binding.etSubescapular.getText().toString()) +
                     parseDoubleOrZero(binding.etSuprailiaca.getText().toString()) +
                     parseDoubleOrZero(binding.etAxilar.getText().toString());
-        } else { // Feminino
+        } else {
             somaDobras = parseDoubleOrZero(binding.etCristaIliaca.getText().toString()) +
                     parseDoubleOrZero(binding.etAbdominal.getText().toString()) +
                     parseDoubleOrZero(binding.etCoxa.getText().toString()) +
@@ -280,7 +271,6 @@ public class AvaliacaoFragment extends Fragment {
             binding.tilCristaIliaca.setVisibility(View.VISIBLE);
         }
     }
-    //</editor-fold>
 
     @Override
     public void onDestroyView() {

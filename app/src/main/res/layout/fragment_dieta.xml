@@ -36,7 +36,6 @@
 
     </LinearLayout>
 
-    <!-- FrameLayout para permitir a sobreposição da ProgressBar -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -53,7 +52,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Café da Manhã -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -83,7 +81,6 @@
                     android:layout_height="wrap_content"
                     android:text="+ Adicionar alimento" />
 
-                <!-- Almoço -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -114,7 +111,6 @@
                     android:layout_height="wrap_content"
                     android:text="+ Adicionar alimento" />
 
-                <!-- Café da Tarde -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -145,7 +141,6 @@
                     android:layout_height="wrap_content"
                     android:text="+ Adicionar alimento" />
 
-                <!-- Jantar -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -176,7 +171,6 @@
                     android:layout_height="wrap_content"
                     android:text="+ Adicionar alimento" />
 
-                <!-- Ceia -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -207,7 +201,6 @@
                     android:layout_height="wrap_content"
                     android:text="+ Adicionar alimento" />
 
-                <!-- Totais e Botão Finalizar -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -240,13 +233,12 @@
             </LinearLayout>
         </ScrollView>
 
-        <!-- PROGRESSBAR ADICIONADA AQUI -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone" /> <!-- Começa invisível -->
+            android:visibility="gone" />
 
     </FrameLayout>
 

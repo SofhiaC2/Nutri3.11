@@ -90,13 +90,11 @@
         android:name="com.example.nutri3.fragments.consultas.AdicionarPacientesFragment"
         android:label="AdicionarPacientesFragment" >
 
-        <!-- ======================= ADICIONE ESTA TAG ======================= -->
         <argument
             android:name="pacienteId"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
-        <!-- ================================================================= -->
 
     </fragment>
 
@@ -109,7 +107,6 @@
         <action
             android:id="@+id/action_verPacientesFragment_to_adicionarPacientesFragment2"
             app:destination="@id/adicionarPacientesFragment2" />
-        <!-- ==================================================================== -->
 
 
     </fragment>
@@ -123,8 +120,7 @@
         android:id="@+id/selecionarPaciente"
         android:name="com.example.nutri3.fragments.consultas.SelecionarPaciente"
         android:label="SelecionarPaciente" >
-    <!-- ================== ARGUMENTOS RECEBIDOS ================== -->
-    <argument
+        <argument
         android:name="incluiAvaliacao"
         app:argType="boolean"
         android:defaultValue="false" />

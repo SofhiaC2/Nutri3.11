@@ -20,7 +20,6 @@ public class ConsultaAdapter extends RecyclerView.Adapter<ConsultaAdapter.Consul
     private final List<DataSnapshot> consultaList;
     private final OnConsultaListener listener;
 
-    // Interface para comunicar eventos de clique para o Fragment
     public interface OnConsultaListener {
         void onConsultaDelete(String consultaId, String nomePaciente);
     }

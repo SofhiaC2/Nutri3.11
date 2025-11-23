@@ -162,7 +162,6 @@ public class VerPacientesFragment extends Fragment implements PacienteAdapter.On
 
     @Override
     public void onEditClick(Paciente paciente) {
-        // O nome do método agora corresponde ao ID da action que você criou
         VerPacientesFragmentDirections.ActionVerPacientesFragmentToAdicionarPacientesFragment2 action =
                 VerPacientesFragmentDirections.actionVerPacientesFragmentToAdicionarPacientesFragment2();
         action.setPacienteId(paciente.getId());

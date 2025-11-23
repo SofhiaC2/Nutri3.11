@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Usaremos um LinearLayout como raiz para organizar a Toolbar e o conteúdo -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- 1. Toolbar adicionada no topo -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarAgendamento"
         android:layout_width="match_parent"
@@ -16,7 +14,6 @@
         app:title="Novo Agendamento"
         app:titleTextColor="@android:color/white"/>
 
-    <!-- 2. O conteúdo agora fica dentro de um ScrollView separado -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,8 +24,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="24dp">
-
-            <!-- O TextView do título foi removido, pois agora está na Toolbar -->
 
             <EditText
                 android:id="@+id/etNomePacienteConsulta"

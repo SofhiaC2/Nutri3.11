@@ -54,7 +54,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Botão para agendar uma nova consulta -->
         <Button
             android:id="@+id/btnAgendarConsulta"
             android:layout_width="0dp"
@@ -68,7 +67,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- O CardView agora ocupa o espaço entre o título e o botão -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardProximaConsulta"
             android:layout_width="0dp"
@@ -96,7 +94,6 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <!-- RECYCLERVIEW SUBSTITUINDO O ANTIGO LAYOUT -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvConsultas"
                     android:layout_width="match_parent"
@@ -107,7 +104,6 @@
                     tools:listitem="@layout/item_consulta"
                     tools:visibility="visible" />
 
-                <!-- TextView para quando não houver consultas -->
                 <TextView
                     android:id="@+id/tvSemConsultas"
                     android:layout_width="match_parent"
@@ -118,7 +114,6 @@
                     android:visibility="gone"
                     tools:visibility="gone" />
 
-                <!-- ProgressBar para indicar o carregamento -->
                 <ProgressBar
                     android:id="@+id/progressBarConsultas"
                     style="?android:attr/progressBarStyle"

@@ -61,7 +61,6 @@
             android:layout_height="wrap_content"
             android:paddingBottom="24dp">
 
-            <!-- GUIDELINES -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_vertical_center"
                 android:layout_width="wrap_content"
@@ -83,7 +82,6 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="16dp" />
 
-            <!-- TÍTULO PACIENTES -->
             <TextView
                 android:id="@+id/tvTituloPacientes"
                 android:layout_width="0dp"
@@ -98,7 +96,6 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end_margin" />
 
-            <!-- CARD VER PACIENTES -->
             <LinearLayout
                 android:id="@+id/btnMenuVerPaciente"
                 android:layout_width="0dp"
@@ -131,7 +128,6 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- CARD ADICIONAR PACIENTE -->
             <LinearLayout
                 android:id="@+id/btnMenuAdicionarPaciente"
                 android:layout_width="0dp"
@@ -163,7 +159,6 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- TÍTULO CONSULTAS -->
             <TextView
                 android:id="@+id/tvTituloConsultas"
                 android:layout_width="0dp"
@@ -178,7 +173,6 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_start_margin"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end_margin" />
 
-            <!-- CARD NOVA CONSULTA -->
             <LinearLayout
                 android:id="@+id/btnNovaConsulta"
                 android:layout_width="0dp"
@@ -211,7 +205,6 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- CARD VER CONSULTAS -->
             <LinearLayout
                 android:id="@+id/btnMenuVerConsultas"
                 android:layout_width="0dp"
