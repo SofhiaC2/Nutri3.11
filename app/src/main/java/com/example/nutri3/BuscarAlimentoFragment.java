@@ -1,11 +1,8 @@
 package com.example.nutri3;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,27 +12,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.example.nutri3.DialogQuantidadeG;
 
 import com.example.nutri3.ViewModel.ConsultaViewModel;
 import com.example.nutri3.adapters.BuscaAlimento;
 import com.example.nutri3.databinding.DialogBuscarAlimentoBinding;
 import com.example.nutri3.model.Alimento;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class BuscarAlimentoFragment extends DialogFragment {
-
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final Handler handler = new Handler(Looper.getMainLooper());
 
     private static final String TAG = "BuscarAlimento";
     private static final String ARG_TIPO_REFEICAO = "tipo_refeicao";
@@ -44,9 +34,6 @@ public class BuscarAlimentoFragment extends DialogFragment {
     private ConsultaViewModel consultaViewModel;
     private BuscaAlimento adapter;
     private String tipoRefeicao;
-
-    private final List<Alimento> listaCompletaAlimentos = new ArrayList<>();
-    private final List<Alimento> resultadosBusca = new ArrayList<>();
 
     public static BuscarAlimentoFragment newInstance(String tipoRefeicao) {
         BuscarAlimentoFragment fragment = new BuscarAlimentoFragment();
@@ -72,6 +59,7 @@ public class BuscarAlimentoFragment extends DialogFragment {
         return binding.getRoot();
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -79,17 +67,12 @@ public class BuscarAlimentoFragment extends DialogFragment {
 
         setupRecyclerView();
         setupListeners();
-        carregarListaCompletaDeAlimentos();
+        // Inicia com uma query vazia.
+        updateSearchQuery("");
     }
 
     private void setupRecyclerView() {
-        adapter = new BuscaAlimento(resultadosBusca, alimento -> {
-            QuantidadeAlimentoFragment dialogQuantidade = QuantidadeAlimentoFragment.newInstance(alimento, tipoRefeicao);
-            dialogQuantidade.show(getParentFragmentManager(), "QuantidadeAlimentoFragment");
-            dismiss();
-        });
         binding.rvResultadosBusca.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.rvResultadosBusca.setAdapter(adapter);
     }
 
     private void setupListeners() {
@@ -98,76 +81,100 @@ public class BuscarAlimentoFragment extends DialogFragment {
         binding.etBuscaAlimento.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filtrarAlimentosLocalmente(s.toString());
+                updateSearchQuery(s.toString());
             }
             @Override public void afterTextChanged(Editable s) {}
         });
     }
 
-    private void carregarListaCompletaDeAlimentos() {
-        binding.progressBarBusca.setVisibility(View.VISIBLE);
-        Log.d(TAG, "Iniciando carregamento do Firebase...");
+    private void updateSearchQuery(String searchText) {
+        DatabaseReference alimentosRef =
+                FirebaseDatabase.getInstance().getReference("alimentos");
 
-        DatabaseReference alimentosRef = FirebaseDatabase.getInstance().getReference("alimentos");
+        String textoBuscaNormalizado = searchText
+                .toLowerCase(Locale.ROOT)
+                .trim();
 
-        alimentosRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!isAdded()) return;
-
-                if (!snapshot.exists()) {
-                    binding.progressBarBusca.setVisibility(View.GONE);
-                    Log.e(TAG, "O snapshot em /alimentos não existe!");
-                    return;
-                }
-
-                executor.execute(() -> {
-                    List<Alimento> alimentosCarregados = new ArrayList<>();
-                    for (DataSnapshot data : snapshot.getChildren()) {
-                        Alimento alimento = data.getValue(Alimento.class);
-                        if (alimento != null && alimento.getNome() != null) {
-                            alimentosCarregados.add(alimento);
-                        }
-                    }
-                    Log.d(TAG, "Processamento em background finalizado. Total: " + alimentosCarregados.size());
-
-                    handler.post(() -> {
-                        if (!isAdded()) return;
-
-                        listaCompletaAlimentos.clear();
-                        listaCompletaAlimentos.addAll(alimentosCarregados);
-
-                        binding.progressBarBusca.setVisibility(View.GONE);
-                        Log.d(TAG, "Lista principal atualizada na UI Thread.");
-
-                        filtrarAlimentosLocalmente(binding.etBuscaAlimento.getText().toString());
-                    });
-                });
+        // 🔒 Só busca com 2 ou mais caracteres
+        if (textoBuscaNormalizado.length() < 2) {
+            // Lógica para limpar a busca...
+            if (adapter != null) {
+                adapter.stopListening();
+                binding.rvResultadosBusca.setAdapter(null);
+                adapter = null;
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                if (!isAdded()) return;
-                binding.progressBarBusca.setVisibility(View.GONE);
-                Log.e(TAG, "Erro ao carregar lista do Firebase.", error.toException());
-            }
-        });
-    }
-
-    private void filtrarAlimentosLocalmente(String textoBusca) {
-        resultadosBusca.clear();
-
-        if (!textoBusca.isEmpty() && !listaCompletaAlimentos.isEmpty()) {
-            String textoBuscaLower = textoBusca.toLowerCase(Locale.ROOT);
-            for (Alimento alimento : listaCompletaAlimentos) {
-                if (alimento.getNome().toLowerCase(Locale.ROOT).contains(textoBuscaLower)) {
-                    resultadosBusca.add(alimento);
-                }
-            }
+            binding.progressBarBusca.setVisibility(View.GONE);
+            binding.tvNenhumResultado.setVisibility(View.GONE);
+            return;
         }
 
+        // 🔍 Busca real
+        binding.progressBarBusca.setVisibility(View.VISIBLE);
+        binding.tvNenhumResultado.setVisibility(View.GONE);
+
+        Query query = alimentosRef
+                .orderByChild("nome_normalizado")
+                .startAt(textoBuscaNormalizado)
+                .endAt(textoBuscaNormalizado + "\uf8ff")
+                .limitToFirst(50);
+
+        FirebaseRecyclerOptions<Alimento> options =
+                new FirebaseRecyclerOptions.Builder<Alimento>()
+                        .setQuery(query, Alimento.class)
+                        .build();
+
+        // Se o adapter for nulo, cria um novo
+        if (adapter == null) {
+            // AQUI ESTÁ A LÓGICA PRINCIPAL COM SEUS NOMES DE ARQUIVO
+            adapter = new BuscaAlimento(options, alimento -> {
+                // Verificamos o booleano 'por_unidade'
+                if (alimento.isPorUnidade()) {
+
+                    DialogQuantidadeU dialog = DialogQuantidadeU.newInstance(alimento, tipoRefeicao);
+                    dialog.show(getParentFragmentManager(), "DialogUnidade");
+                } else {
+
+                    DialogQuantidadeG dialog = DialogQuantidadeG.newInstance(alimento, tipoRefeicao);
+                    dialog.show(getParentFragmentManager(), "DialogGrama");
+                }
+                // Não fechamos o dialog de busca, permitindo adicionar vários alimentos
+            }) {
+                @Override
+                public void onDataChanged() {
+                    super.onDataChanged();
+                    binding.progressBarBusca.setVisibility(View.GONE);
+                    if (getItemCount() == 0) {
+                        binding.tvNenhumResultado.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.tvNenhumResultado.setVisibility(View.GONE);
+                    }
+                }
+            };
+
+            binding.rvResultadosBusca.setAdapter(adapter);
+            adapter.startListening();
+        } else {
+            // Se já existe, apenas atualiza a query e reinicia o 'listening'
+            adapter.stopListening();
+            adapter.updateOptions(options);
+            adapter.startListening();
+        }
+    }
+
+    // <-- OS MÉTODOS onStart e onStop FORAM MOVIDOS PARA CÁ, FORA DO updateSearchQuery -->
+    @Override
+    public void onStart() {
+        super.onStart();
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.startListening();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter != null) {
+            adapter.stopListening();
         }
     }
 }

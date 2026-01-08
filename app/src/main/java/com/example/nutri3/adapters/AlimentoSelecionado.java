@@ -3,28 +3,18 @@ package com.example.nutri3.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.nutri3.R;
 import com.example.nutri3.model.Alimento;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class AlimentoSelecionado extends RecyclerView.Adapter<AlimentoSelecionado.AlimentoViewHolder> {
 
-    private final List<Alimento> alimentos;
-    private final OnAlimentoInteractionListener listener;
-
-    public interface OnAlimentoInteractionListener {
-        void onRemoveAlimento(int position);
-    }
-
-    public AlimentoSelecionado(List<Alimento> alimentos, OnAlimentoInteractionListener listener) {
-        this.alimentos = alimentos;
-        this.listener = listener;
-    }
+    private List<Alimento> alimentos = new ArrayList<>();
 
     @NonNull
     @Override
@@ -44,39 +34,43 @@ public class AlimentoSelecionado extends RecyclerView.Adapter<AlimentoSelecionad
         return alimentos.size();
     }
 
-    class AlimentoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNomeAlimento;
-        TextView tvPorcao;
-        TextView tvNutrientes;
-        Button btnRemover;
+    public void setAlimentos(List<Alimento> novosAlimentos) {
+        this.alimentos = novosAlimentos;
+        notifyDataSetChanged();
+    }
 
-        AlimentoViewHolder(@NonNull View itemView) {
+    // --- CORREÇÃO ESTÁ AQUI ---
+    static class AlimentoViewHolder extends RecyclerView.ViewHolder {
+        TextView tvNome;
+        TextView tvPorcao; // Referência para o TextView da porção
+        TextView tvNutrientes; // Referência para o TextView dos nutrientes
+
+        public AlimentoViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNomeAlimento = itemView.findViewById(R.id.tvNomeAlimento);
+            // Faz o findViewById para os IDs do SEU layout
+            tvNome = itemView.findViewById(R.id.tvNomeAlimento);
             tvPorcao = itemView.findViewById(R.id.tvPorcao);
             tvNutrientes = itemView.findViewById(R.id.tvNutrientes);
-            btnRemover = itemView.findViewById(R.id.btnRemoverAlimento);
-
-            btnRemover.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onRemoveAlimento(position);
-                }
-            });
+            // O botão de remover pode ser implementado depois
         }
 
         void bind(Alimento alimento) {
-            tvNomeAlimento.setText(alimento.getNome());
+            tvNome.setText(alimento.getNome());
+
+            // Usa os valores CALCULADOS que vieram do Alimento.java
+
+            // 1. Preenche o TextView da Porção
+            // O método getDescricaoPorcao() já cria o texto formatado "X unidades (Yg)" ou "Zg"
             tvPorcao.setText(alimento.getDescricaoPorcao());
 
-            String nutrientes = String.format(Locale.getDefault(),
+            // 2. Preenche o TextView dos Nutrientes
+            String nutrientesFormatados = String.format(Locale.getDefault(),
                     "%.0f Kcal | C: %.1fg | P: %.1fg | G: %.1fg",
                     alimento.getEnergiaCalculada(),
                     alimento.getCarboidratosCalculado(),
                     alimento.getProteinasCalculada(),
-                    alimento.getGordurasCalculada()
-            );
-            tvNutrientes.setText(nutrientes);
+                    alimento.getGordurasCalculada());
+            tvNutrientes.setText(nutrientesFormatados);
         }
     }
 }

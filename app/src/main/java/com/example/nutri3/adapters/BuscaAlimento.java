@@ -3,26 +3,39 @@ package com.example.nutri3.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton; // Importar
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.nutri3.R;
 import com.example.nutri3.model.Alimento;
-import java.util.List;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+
 import java.util.Locale;
 
-public class BuscaAlimento extends RecyclerView.Adapter<BuscaAlimento.BuscaViewHolder> {
+public class BuscaAlimento extends FirebaseRecyclerAdapter<Alimento, BuscaAlimento.BuscaViewHolder> {
 
-    private final List<Alimento> resultados;
-    private final OnAlimentoClickListener listener;
+    private final OnAddAlimentoListener listener;
 
-    public interface OnAlimentoClickListener {
-        void onAlimentoClick(Alimento alimento);
+    // 1. Interface simplificada para a ÚNICA AÇÃO que queremos: adicionar
+    public interface OnAddAlimentoListener {
+        void onAddClick(Alimento alimento);
     }
 
-    public BuscaAlimento(List<Alimento> resultados, OnAlimentoClickListener listener) {
-        this.resultados = resultados;
+    public BuscaAlimento(@NonNull FirebaseRecyclerOptions<Alimento> options, OnAddAlimentoListener listener) {
+        super(options);
         this.listener = listener;
+    }
+
+    @Override
+    protected void onBindViewHolder(@NonNull BuscaViewHolder holder, int position, @NonNull Alimento model) {
+        holder.bind(model);
+        // 2. O clique agora é no botão, não no item inteiro
+        holder.btnAdd.setOnClickListener(v -> {
+            listener.onAddClick(model);
+        });
     }
 
     @NonNull
@@ -32,38 +45,25 @@ public class BuscaAlimento extends RecyclerView.Adapter<BuscaAlimento.BuscaViewH
         return new BuscaViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull BuscaViewHolder holder, int position) {
-        Alimento alimento = resultados.get(position);
-        holder.bind(alimento);
-    }
+    public static class BuscaViewHolder extends RecyclerView.ViewHolder {
+        TextView tvNome;
+        TextView tvDetalhes;
+        ImageButton btnAdd; // 3. Referência para o novo botão
 
-    @Override
-    public int getItemCount() {
-        return resultados.size();
-    }
-
-    class BuscaViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNome, tvDetalhes;
-
-        BuscaViewHolder(@NonNull View itemView) {
+        public BuscaViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNome = itemView.findViewById(R.id.tvNomeAlimentoBusca);
             tvDetalhes = itemView.findViewById(R.id.tvDetalhesAlimentoBusca);
-
-            itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onAlimentoClick(resultados.get(position));
-                }
-            });
+            btnAdd = itemView.findViewById(R.id.btnAdicionarAlimen); // 4. Pegar o novo botão
         }
 
         void bind(Alimento alimento) {
             tvNome.setText(alimento.getNome());
+            String porcao = alimento.getPorcaoBase() != null ? alimento.getPorcaoBase() : "100g";
             String detalhes = String.format(Locale.getDefault(),
-                    "%.0f Kcal (100g)",
-                    alimento.getEnergiaKcal()
+                    "%.0f Kcal (%s)",
+                    alimento.getEnergiaKcal(),
+                    porcao
             );
             tvDetalhes.setText(detalhes);
         }

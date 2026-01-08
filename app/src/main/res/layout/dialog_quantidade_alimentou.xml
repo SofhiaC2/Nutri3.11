@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".DialogQuantidadeU">
+
+    <TextView
+        android:id="@+id/tvNomeAlimento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        tools:text="Ovo de galinha, inteiro" />
+
+    <TextView
+        android:id="@+id/tvPorcaoBase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:textAppearance="?attr/textAppearanceCaption"
+        tools:text="Valores por unidade (aprox. 50g)" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilQuantidadeUnidade"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:hint="Nº de Unidades">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etQuantidadeUnidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Valores Nutricionais Calculados"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+    <TextView
+        android:id="@+id/tvKcalCalculado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="?attr/textAppearanceBody1"
+        tools:text="Calorias: 140 kcal" />
+
+    <TextView
+        android:id="@+id/tvPesoTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBody2"
+        tools:text="Peso Total: 100g" />
+
+    <Button
+        android:id="@+id/btnAdicionar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Adicionar à Refeição" />
+
+</LinearLayout>

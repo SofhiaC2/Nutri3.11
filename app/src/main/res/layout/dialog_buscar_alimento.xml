@@ -25,6 +25,18 @@
             android:id="@+id/etBuscaAlimento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <!-- Em res/layout/dialog_buscar_alimento.xml -->
+        <TextView
+            android:id="@+id/tvNenhumResultado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nenhum resultado encontrado"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/etBuscaAlimento"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"/>
+
 
     </com.google.android.material.textfield.TextInputLayout>
 
